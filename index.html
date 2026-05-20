@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nine Angels Villa — Madliena, Malta</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── Home full-bleed hero ─────────────────────────── */
+  .hero-bleed {
+    position: relative;
+    min-height: 92vh;
+    background: #1a1814 url('assets/pool-aerial.jpg') center 38% / cover no-repeat;
+    margin-top: -73px; /* pull under the sticky nav */
+    overflow: hidden;
+  }
+  .hero-bleed::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(20,18,14,0.55) 0%, rgba(20,18,14,0.18) 30%, rgba(20,18,14,0) 55%, rgba(20,18,14,0.72) 100%);
+    pointer-events: none;
+  }
+  .hero-bleed::after {
+    /* extremely subtle film grain to keep gradients from banding on dark sky */
+    content:'';
+    position:absolute; inset:0;
+    background-image: radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+    opacity: 0.4;
+    pointer-events:none;
+  }
+  .hero-bleed .hero-stack {
+    position: relative; z-index: 2;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: clamp(160px, 22vh, 240px) 48px clamp(70px, 9vw, 110px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    min-height: 92vh;
+    color: #fff;
+  }
+  .hero-bleed .eyebrow {
+    color: rgba(255,255,255,0.82);
+    margin-bottom: 22px;
+    display: inline-flex; align-items: center; gap: 14px;
+  }
+  .hero-bleed .eyebrow::before {
+    content: ''; width: 28px; height: 1px; background: var(--rose);
+  }
+  .hero-bleed h1 {
+    color: #fff;
+    margin: 0 0 30px;
+    max-width: 14ch;
+    text-shadow: 0 1px 30px rgba(0,0,0,0.18);
+  }
+  .hero-bleed .lede {
+    color: rgba(255,255,255,0.9);
+    max-width: 52ch;
+    margin-bottom: 44px;
+    text-shadow: 0 1px 20px rgba(0,0,0,0.2);
+  }
+  .hero-bleed .hero-cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-bleed .btn-primary { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+  .hero-bleed .btn-primary:hover { background: #fff; color: var(--ink); }
+  .hero-bleed .btn-outline { color: #fff; border-color: rgba(255,255,255,0.85); background: transparent; }
+  .hero-bleed .btn-outline:hover { background: #fff; color: var(--ink); border-color: #fff; }
+
+  /* Bottom marker — small monogram + scroll cue, anchored bottom-right */
+  .hero-bleed .hero-mark {
+    position: absolute; right: clamp(28px, 4vw, 56px); bottom: 28px; z-index: 2;
+    display: flex; align-items: center; gap: 14px;
+    color: rgba(255,255,255,0.75);
+    font-family: var(--sans);
+    font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase;
+  }
+  .hero-bleed .hero-mark .ix {
+    width: 30px; height: 30px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.7);
+    display: grid; place-items: center;
+    font-family: var(--serif); font-style: italic; font-size: 14px; color: #fff;
+  }
+  .hero-bleed .hero-mark .scroll-line {
+    width: 1px; height: 36px; background: rgba(255,255,255,0.5); animation: scrollCue 2.4s ease-in-out infinite;
+    transform-origin: top;
+  }
+  @keyframes scrollCue {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.4; }
+    50%      { transform: scaleY(1);   opacity: 1; }
+  }
+
+  /* Slow Ken Burns on the photo via background-position */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-bleed { animation: heroDrift 28s ease-in-out infinite alternate; }
+    @keyframes heroDrift {
+      from { background-size: 104% auto; background-position: center 38%; }
+      to   { background-size: 112% auto; background-position: 52% 42%; }
+    }
+  }
+
+  /* Nav: transparent + light over hero, then cream/light once scrolled */
+  body.home .nav {
+    background: transparent;
+    backdrop-filter: none; -webkit-backdrop-filter: none;
+    border-bottom-color: rgba(255,255,255,0.14);
+  }
+  body.home .nav .brand,
+  body.home .nav .nav-links a,
+  body.home .nav .nav-cta { color: #fff; }
+  body.home .nav .brand-mark { border-color: rgba(255,255,255,0.85); color: #fff; }
+  body.home .nav .nav-links a.active::after { background: #fff; }
+  body.home .nav .nav-cta { border-color: rgba(255,255,255,0.85); }
+  body.home .nav .nav-cta:hover { background: #fff; color: var(--ink); }
+  body.home .nav .nav-toggle { color: #fff; }
+
+  /* Once scrolled past hero, fall back to the standard cream nav (existing .scrolled rules) */
+  body.home .nav.scrolled {
+    background: rgba(250, 247, 241, 0.95);
+    backdrop-filter: saturate(140%) blur(14px); -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom-color: rgba(216, 206, 188, 0.5);
+  }
+  body.home .nav.scrolled .brand,
+  body.home .nav.scrolled .nav-links a,
+  body.home .nav.scrolled .nav-cta { color: var(--ink-soft); }
+  body.home .nav.scrolled .nav-links a.active,
+  body.home .nav.scrolled .brand { color: var(--ink); }
+  body.home .nav.scrolled .brand-mark { border-color: var(--ink); color: var(--ink); }
+  body.home .nav.scrolled .nav-links a.active::after { background: var(--ink); }
+  body.home .nav.scrolled .nav-cta { border-color: var(--ink); }
+  body.home .nav.scrolled .nav-cta:hover { background: var(--ink); color: var(--paper); }
+
+  @media (max-width: 880px) {
+    .hero-bleed { min-height: 86vh; }
+    .hero-bleed .hero-stack { padding-left: 28px; padding-right: 28px; }
+    .hero-bleed .hero-mark { display: none; }
+  }
+</style>
+</head>
+<body data-screen-label="01 Home" class="home">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <span class="brand-mark">IX</span>
+      <span>Nine Angels</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="stays.html">Stays</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="info.html">Info</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Enquire</a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a>
+    <a href="events.html">Events</a>
+    <a href="stays.html">Stays</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="info.html">Info</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-bleed" aria-label="Nine Angels Villa — aerial view">
+  <div class="hero-stack">
+    <span class="eyebrow">Madliena · Malta · Est. 2010</span>
+    <h1 class="serif">Behind the Gate.<br/><em style="font-weight:300">A World Apart.</em></h1>
+    <p class="lede">A hidden Mediterranean oasis in Madliena. A lagoon pool, lush palm gardens, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
+    <div class="hero-cta-row">
+      <a href="events.html" class="btn btn-primary">Host Your Event <span class="arrow">→</span></a>
+      <a href="stays.html" class="btn btn-outline">Book Your Stay <span class="arrow">→</span></a>
+    </div>
+  </div>
+  <div class="hero-mark" aria-hidden="true">
+    <span>Scroll</span>
+    <span class="scroll-line"></span>
+    <span class="ix">IX</span>
+  </div>
+</section>
+
+<!-- SEASONAL BANNER -->
+<section style="padding: 22px 0; background: var(--ink); color: var(--paper);">
+  <div class="wrap" style="display:flex; gap: 24px; align-items: center; justify-content: center; flex-wrap: wrap; text-align: center; font-size: 14px; letter-spacing: 0.04em;">
+    <span class="eyebrow" style="color: var(--rose); letter-spacing: 0.22em;">Summer 2026</span>
+    <span style="opacity: 0.92;">July &amp; August: <strong style="font-weight:500;">3-night minimum stay</strong>. Events resume from September.</span>
+    <a href="stays.html" style="border-bottom: 1px solid var(--rose); color: var(--paper); padding-bottom: 2px;">Plan your stay →</a>
+  </div>
+</section>
+
+<!-- INTRO STRIP -->
+<section style="padding: 70px 0; background: var(--cream);">
+  <div class="wrap" style="text-align:center;">
+    <div class="divider" style="margin-bottom: 28px;"><span class="divider-mark">IX</span></div>
+    <p class="serif" style="font-size: clamp(24px, 2.6vw, 36px); line-height: 1.45; max-width: 780px; margin: 0 auto; color: var(--ink); font-weight: 300; font-style: italic;">
+      "The gate closes. The garden opens. Whatever you came for &mdash; a wedding, a slow week, a long lunch &mdash; the villa simply makes room for it."
+    </p>
+  </div>
+</section>
+
+<!-- TWO OFFERINGS -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Two ways to arrive</span>
+      <h2>Equal parts venue and retreat.</h2>
+      <p>Nine Angels lives a double life. By day, it hosts your celebration. By evening, it returns to being a private home &mdash; for you, and only you.</p>
+    </div>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 32px;" class="offerings reveal">
+      <article class="card">
+        <div class="ph" data-img style="--ph-img: url('assets/lawn-fountain.jpg');"></div>
+        <div class="card-body">
+          <span class="eyebrow">01 &middot; Events</span>
+          <h3>Our Venue.<br/>Your Event.</h3>
+          <p>An open-air estate for weddings, gatherings and parties. Rose-arch entrance, manicured lawn, gazebo and outdoor kitchen.</p>
+          <div class="meta">
+            <span>Up to <span class="count-up" data-target="100" data-duration="1600">0</span> guests</span>
+            <span>11am &mdash; 11pm</span>
+          </div>
+          <div style="margin-top: 28px;">
+            <a href="events.html" class="btn-ghost serif" style="font-size: 17px;">Explore the venue &nbsp;→</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="ph" data-img style="--ph-img: url('assets/living-room.jpg');"></div>
+        <div class="card-body">
+          <span class="eyebrow">02 &middot; Stays</span>
+          <h3>The Secret Villa.<br/>Your Stay.</h3>
+          <p>A four-bedroom villa wrapped around a lagoon pool. Completely private, fully self-contained, never shared with another booking.</p>
+          <div class="meta">
+            <span>4 bedrooms &middot; sleeps 7</span>
+            <span>Lagoon pool</span>
+          </div>
+          <div style="margin-top: 28px;">
+            <a href="stays.html" class="btn-ghost serif" style="font-size: 17px;">See the villa &nbsp;→</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+@media (max-width: 880px) {
+  .offerings { grid-template-columns: 1fr !important; }
+}
+</style>
+
+<!-- FEATURE STRIP -->
+<section style="background: var(--cream); padding: 110px 0;">
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow">The setting</span>
+        <h2 style="margin: 18px 0 24px;">Madliena, quietly.</h2>
+        <p>Tucked into one of Malta's most discreet residential pockets, the villa sits behind high walls on a single quiet road. Inside: a palm-shaded garden, a lagoon-shaped pool, and the kind of stillness that only a private property can offer.</p>
+        <p style="margin-top: 18px;">Ten minutes to the coast. Twenty to Valletta. A world away the moment the gate closes behind you.</p>
+        <ul class="feature-list">
+          <li>Lagoon pool</li>
+          <li>Palm garden</li>
+          <li>Outdoor kitchen</li>
+          <li>Beach access</li>
+          <li>Rose-arch entrance</li>
+          <li>Ambient lighting</li>
+        </ul>
+      </div>
+      <div class="reveal">
+        <div class="ph ph-tall" data-img style="--ph-img: url('assets/garden-arches.jpg'); --ph-pos: center 60%;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section style="padding: 120px 0; text-align: center;">
+  <div class="wrap-narrow reveal">
+    <span class="eyebrow">Ready when you are</span>
+    <h2 style="margin: 22px 0 26px;">Tell us what you have in mind.</h2>
+    <p class="lede" style="margin: 0 auto 40px;">Whether it's a wedding for a hundred or a week for two, we'll walk you through what's possible and hold your date.</p>
+    <div style="display:flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+      <a href="contact.html" class="btn btn-primary">Enquire <span class="arrow">→</span></a>
+      <a href="gallery.html" class="btn btn-outline">View the Gallery <span class="arrow">→</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand"><span class="brand-mark">IX</span><span class="serif">Nine Angels</span></div>
+        <p style="margin-top: 8px; max-width: 32ch;">A private villa in Madliena, Malta. Available for events and stays.</p>
+      </div>
+      <div>
+        <h4>Visit</h4>
+        <ul>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="stays.html">Stays</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="info.html">Practical Info</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Find us</h4>
+        <ul>
+          <li>Madliena Road</li>
+          <li>Madliena, Malta</li>
+          <li><a href="https://bit.ly/nineangels" target="_blank" rel="noopener">View on map ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Get in touch</h4>
+        <ul>
+          <li><a href="tel:+35679790202">+356 7979 0202</a></li>
+          <li><a href="mailto:info@christianopropertymanagement.com">info@christianopropertymanagement.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Nine Angels Villa</span>
+      <span class="monogram">— IX —</span>
+    </div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

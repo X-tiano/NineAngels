@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stays — Nine Angels Villa</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-screen-label="03 Stays">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">IX</span><span>Nine Angels</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="stays.html" class="active">Stays</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="info.html">Info</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="https://www.airbnb.com/rooms/1654813097419096100" target="_blank" rel="noopener" class="nav-cta">Book</a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a><a href="events.html">Events</a><a href="stays.html">Stays</a>
+    <a href="gallery.html">Gallery</a><a href="info.html">Info</a><a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow">Overnight stays</span>
+      <h1 class="serif">Stay at the<br/><em style="font-weight:300">Secret Villa.</em></h1>
+      <p class="lede">A lagoon pool, private walls, and nothing to do but exhale.</p>
+      <div class="hero-cta-row" style="margin-top: 36px;">
+        <a href="https://www.airbnb.com/rooms/1654813097419096100" target="_blank" rel="noopener" class="btn btn-primary">Book on Airbnb <span class="arrow">→</span></a>
+        <a href="#layout" class="btn btn-outline">See the Layout</a>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="ph" data-img style="--ph-img: url('assets/pool-dusk.jpg');"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SEASONAL NOTICE -->
+<section style="padding: 28px 0; background: var(--ink); color: var(--paper);">
+  <div class="wrap" style="display:flex; gap: 28px; align-items: center; justify-content: center; flex-wrap: wrap; text-align: center;">
+    <span class="eyebrow" style="color: var(--rose); letter-spacing: 0.22em;">Summer · July &amp; August</span>
+    <span class="serif" style="font-size: 20px; font-style: italic;">Minimum stay of 3 nights. The villa is held for guests, not events, through the high season.</span>
+  </div>
+</section>
+
+<!-- AT A GLANCE -->
+<section style="padding: 80px 0 60px;">
+  <div class="wrap">
+    <div class="glance reveal">
+      <div><div class="eyebrow">Bedrooms</div><div class="glance-num serif"><span class="count-up" data-target="4" data-duration="1100">0</span></div></div>
+      <div><div class="eyebrow">Sleeps</div><div class="glance-num serif"><span class="count-up" data-target="7" data-duration="1300">0</span></div></div>
+      <div><div class="eyebrow">Bathrooms</div><div class="glance-num serif"><span class="count-up" data-target="4.5" data-decimals="1" data-duration="1500">0.0</span></div></div>
+      <div><div class="eyebrow">Pool</div><div class="glance-num serif">Lagoon</div></div>
+      <div><div class="eyebrow">Garden</div><div class="glance-num serif">Private</div></div>
+    </div>
+  </div>
+</section>
+
+<style>
+.glance {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 36px 0;
+}
+.glance > div { text-align: center; padding: 8px 16px; border-right: 1px solid var(--line); }
+.glance > div:last-child { border-right: none; }
+.glance-num {
+  font-size: clamp(28px, 3.5vw, 44px);
+  margin-top: 8px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+@media (max-width: 800px) {
+  .glance { grid-template-columns: repeat(2, 1fr); gap: 28px 8px; }
+  .glance > div:nth-child(2n) { border-right: none; }
+  .glance > div:last-child { grid-column: span 2; }
+}
+</style>
+
+<!-- LAYOUT -->
+<section id="layout">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The villa</span>
+      <h2>Four bedrooms, one private world.</h2>
+      <p>Two floors of bright, simply-furnished rooms wrapped around a courtyard pool. Sleeps seven comfortably, with room for an eighth on request.</p>
+    </div>
+
+    <div class="rooms reveal-stagger">
+      <article class="room">
+        <div class="ph" data-img style="--ph-img: url('assets/bedroom-master.jpg');"></div>
+        <div class="room-body">
+          <span class="eyebrow">Bedroom 01</span>
+          <h3>The Master</h3>
+          <p>King bed, en-suite with rainfall shower, and a private terrace looking onto the garden.</p>
+          <div class="room-meta"><span>King bed</span><span>En-suite</span></div>
+        </div>
+      </article>
+      <article class="room">
+        <div class="ph" data-img style="--ph-img: url('assets/bedroom-queen.jpg');"></div>
+        <div class="room-body">
+          <span class="eyebrow">Bedroom 02</span>
+          <h3>The Queen</h3>
+          <p>Generous queen bed with a peaceful palm-garden view and full bath.</p>
+          <div class="room-meta"><span>Queen bed</span><span>Bath</span></div>
+        </div>
+      </article>
+      <article class="room">
+        <div class="ph" data-img style="--ph-img: url('assets/bedroom-single.jpg'); --ph-pos: 30% center;"></div>
+        <div class="room-body">
+          <span class="eyebrow">Bedroom 03</span>
+          <h3>The Twin</h3>
+          <p>Two single beds &mdash; perfect for siblings, friends or an older child and grandparent.</p>
+          <div class="room-meta"><span>2 singles</span><span>Shared bath</span></div>
+        </div>
+      </article>
+      <article class="room">
+        <div class="ph" data-img style="--ph-img: url('assets/bedroom-single.jpg'); --ph-pos: 70% center;"></div>
+        <div class="room-body">
+          <span class="eyebrow">Bedroom 04</span>
+          <h3>The Single</h3>
+          <p>A snug single room with a reading chair and a wide window.</p>
+          <div class="room-meta"><span>1 single</span><span>Shared bath</span></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+.rooms {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+.room {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  transition: box-shadow 0.3s;
+}
+.room:hover { box-shadow: 0 14px 32px -22px rgba(45,42,36,0.25); }
+.room .ph { aspect-ratio: auto; height: 100%; }
+.room-body { padding: 32px 30px; display: flex; flex-direction: column; justify-content: center; }
+.room h3 { font-size: 30px; margin: 12px 0 12px; }
+.room p { font-size: 15px; line-height: 1.6; }
+.room-meta {
+  display: flex; gap: 18px; margin-top: 22px; padding-top: 18px;
+  border-top: 1px solid var(--line); font-size: 12px; color: var(--taupe-dark);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+@media (max-width: 980px) {
+  .rooms { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .room { grid-template-columns: 1fr; }
+  .room .ph { aspect-ratio: 4 / 3; }
+}
+</style>
+
+<!-- HIGHLIGHTS -->
+<section style="background: var(--cream);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Highlights</span>
+      <h2>Quietly equipped.</h2>
+      <p>The villa is fully self-contained &mdash; you can come for a week and never need to leave.</p>
+    </div>
+
+    <div class="highlights reveal-stagger">
+      <div class="hi"><div class="hi-mark">·</div><h4>Private Lagoon Pool</h4><p>Yours alone, never shared. Lit softly after dark.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>Palm Garden</h4><p>Mature palms, stone paths, scented herbs.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>Beach Access</h4><p>A short walk to the nearest swimming bay.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>Full Kitchen</h4><p>Espresso, induction hob, oven, dishwasher, full pantry basics.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>WiFi</h4><p>Fast and reliable throughout the property.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>Garden View</h4><p>Every room looks onto greenery, not neighbours.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>Self Check-in</h4><p>Smart-lock entry. Arrive on your own time.</p></div>
+      <div class="hi"><div class="hi-mark">·</div><h4>Rainfall Showers</h4><p>In every bathroom &mdash; 4.5 of them.</p></div>
+    </div>
+  </div>
+</section>
+
+<style>
+.highlights {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 32px;
+}
+.hi { padding-top: 18px; border-top: 1px solid var(--line); }
+.hi-mark { font-family: var(--serif); font-size: 36px; line-height: 0.4; color: var(--taupe); margin-bottom: 14px; }
+.hi h4 { font-family: var(--serif); font-size: 22px; font-weight: 500; margin-bottom: 8px; }
+.hi p { font-size: 14px; line-height: 1.55; }
+@media (max-width: 880px) { .highlights { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .highlights { grid-template-columns: 1fr; } }
+</style>
+
+<!-- LOGISTICS -->
+<section>
+  <div class="wrap">
+    <div class="split">
+      <div class="reveal">
+        <span class="eyebrow">Arrival &amp; departure</span>
+        <h2 style="margin: 18px 0 28px;">Easy in, easy out.</h2>
+        <div class="logistics-grid">
+          <div>
+            <div class="eyebrow">Check-in</div>
+            <div class="serif" style="font-size: 36px; margin-top: 6px;">4:00 pm</div>
+            <p style="margin-top: 8px; font-size: 14px;">Self check-in via smart lock. Code arrives by message on the morning of arrival.</p>
+          </div>
+          <div>
+            <div class="eyebrow">Checkout</div>
+            <div class="serif" style="font-size: 36px; margin-top: 6px;">11:00 am</div>
+            <p style="margin-top: 8px; font-size: 14px;">Drop the keys, leave the dishes. We'll handle the rest.</p>
+          </div>
+        </div>
+        <div style="margin-top: 24px; padding: 22px 26px; background: var(--cream-deep); border-left: 2px solid var(--ink);">
+          <span class="eyebrow" style="display:block; margin-bottom: 6px;">Summer minimum</span>
+          <p style="font-size: 15px; color: var(--ink);"><strong style="font-weight:500;">July &amp; August:</strong> 3-night minimum stay. The villa runs as a retreat through the high season &mdash; events resume from September.</p>
+        </div>
+        <p style="margin-top: 24px;">For house rules, deposits and full T&Cs, see the <a href="info.html" style="border-bottom: 1px solid var(--ink);">Practical Info</a> page.</p>
+      </div>
+      <div class="reveal">
+        <div class="ph ph-tall" data-img style="--ph-img: url('assets/entry-stone-path.jpg');"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.logistics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  padding: 32px;
+  background: var(--cream);
+  border: 1px solid var(--line);
+}
+@media (max-width: 600px) { .logistics-grid { grid-template-columns: 1fr; } }
+</style>
+
+<!-- BOOK CTA -->
+<section style="background: var(--cream-deep); text-align: center;">
+  <div class="wrap-narrow reveal">
+    <div class="divider" style="margin-bottom: 28px;"><span class="divider-mark">IX</span></div>
+    <h2 style="margin-bottom: 22px;">Ready to book?</h2>
+    <p class="lede" style="margin: 0 auto 40px;">Availability, rates and reviews live on Airbnb. Booking is direct, instant and protected by their guarantee.</p>
+    <a href="https://www.airbnb.com/rooms/1654813097419096100" target="_blank" rel="noopener" class="btn btn-primary">Book on Airbnb <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand"><span class="brand-mark">IX</span><span class="serif">Nine Angels</span></div>
+        <p style="margin-top: 8px; max-width: 32ch;">A private villa in Madliena, Malta. Available for events and stays.</p>
+      </div>
+      <div><h4>Visit</h4><ul>
+        <li><a href="events.html">Events</a></li><li><a href="stays.html">Stays</a></li>
+        <li><a href="gallery.html">Gallery</a></li><li><a href="info.html">Practical Info</a></li>
+      </ul></div>
+      <div><h4>Find us</h4><ul>
+        <li>Madliena Road</li><li>Madliena, Malta</li>
+        <li><a href="https://bit.ly/nineangels" target="_blank" rel="noopener">View on map ↗</a></li>
+      </ul></div>
+      <div><h4>Get in touch</h4><ul>
+        <li><a href="tel:+35679790202">+356 7979 0202</a></li>
+        <li><a href="mailto:info@christianopropertymanagement.com">info@christianopropertymanagement.com</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Nine Angels Villa</span><span class="monogram">— IX —</span></div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

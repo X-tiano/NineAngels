@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Events — Nine Angels Villa</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-screen-label="02 Events">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">IX</span><span>Nine Angels</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="stays.html">Stays</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="info.html">Info</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="https://docs.google.com/forms/d/1MDs0Yc04X_3vYHMw3tVAoSmneqoPxvUPE44I9vX3nco/edit" target="_blank" rel="noopener" class="nav-cta">Enquire</a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a><a href="events.html">Events</a><a href="stays.html">Stays</a>
+    <a href="gallery.html">Gallery</a><a href="info.html">Info</a><a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <span class="eyebrow">Events at Nine Angels</span>
+      <h1 class="serif">Our Venue.<br/><em style="font-weight:300">Your Event.</em></h1>
+      <p class="lede">Open-air, intimate, and entirely yours for the day. The lawn, the lagoon pool, the rose arch &mdash; ready to host whatever you're dreaming up.</p>
+      <div class="hero-cta-row">
+        <a href="https://docs.google.com/forms/d/1MDs0Yc04X_3vYHMw3tVAoSmneqoPxvUPE44I9vX3nco/edit" target="_blank" rel="noopener" class="btn btn-primary">Enquire About Your Date <span class="arrow">→</span></a>
+        <a href="#rates" class="btn btn-outline">View Rates</a>
+      </div>
+      <div style="margin-top: 56px; display:flex; gap: 48px; flex-wrap: wrap;">
+        <div>
+          <div class="eyebrow">Hours</div>
+          <div class="serif" style="font-size: 28px; margin-top: 6px;">11am &mdash; 11pm</div>
+        </div>
+        <div>
+          <div class="eyebrow">Capacity</div>
+          <div class="serif" style="font-size: 28px; margin-top: 6px;">Up to <span class="count-up" data-target="100" data-duration="1600">0</span> guests</div>
+        </div>
+        <div>
+          <div class="eyebrow">Season</div>
+          <div class="serif" style="font-size: 28px; margin-top: 6px;">Sept &mdash; June</div>
+          <p style="font-size: 12px; color: var(--taupe-dark); margin-top: 6px; max-width: 22ch;">July &amp; August reserved for villa stays.</p>
+        </div>
+      </div>
+    </div>
+    <div class="hero-img">
+      <div class="ph" data-img style="--ph-img: url('assets/rose-arch-night.jpg'); --ph-pos: center 30%;"></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">The grounds</span>
+      <h2>Everything you need, already here.</h2>
+      <p>The estate is delivered fully set: gardens, kitchen, lighting and shaded spaces. Bring your guests, your menu and your music &mdash; we'll have everything else ready.</p>
+    </div>
+
+    <div class="features-grid reveal-stagger">
+      <div class="feature-tile">
+        <div class="feature-num serif">01</div>
+        <h4>Arch of Roses</h4>
+        <p>The signature entrance. A photographed-a-thousand-times rose arch your guests pass under as they arrive.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">02</div>
+        <h4>Lagoon Pool</h4>
+        <p>Centrepiece of the garden. Surrounded by stone, palms and ambient lighting after dark.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">03</div>
+        <h4>Manicured Lawn</h4>
+        <p>The flat, open green that does ceremonies, dining and dance floors with equal ease.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">04</div>
+        <h4>Outdoor Kitchen &amp; BBQ</h4>
+        <p>A full working kitchen for your caterer or private chef, with grill and prep counters.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">05</div>
+        <h4>Gazebo &amp; Shaded Seating</h4>
+        <p>Cool corners for the afternoon and a covered gazebo for speeches, drinks or quiet conversation.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">06</div>
+        <h4>Zip Line</h4>
+        <p>An unexpected garden surprise. A favourite of children and slightly tipsy adults alike.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">07</div>
+        <h4>WC &amp; Showers</h4>
+        <p>Guest facilities discreetly placed within the grounds. Towels and amenities provided.</p>
+      </div>
+      <div class="feature-tile">
+        <div class="feature-num serif">08</div>
+        <h4>Ambient Lighting</h4>
+        <p>Festoon lights, lanterns and warm uplighting for when the sun goes down.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.feature-tile {
+  background: var(--paper);
+  padding: 36px 30px 40px;
+}
+.feature-num {
+  font-size: 14px;
+  color: var(--taupe);
+  letter-spacing: 0.04em;
+  margin-bottom: 18px;
+}
+.feature-tile h4 { margin-bottom: 10px; font-family: var(--serif); font-weight: 500; font-size: 22px; }
+.feature-tile p { font-size: 14px; line-height: 1.6; }
+@media (max-width: 980px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .features-grid { grid-template-columns: 1fr; } }
+</style>
+
+<!-- EVENT TYPES -->
+<section style="background: var(--cream);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">What we host</span>
+      <h2>Three things, done well.</h2>
+    </div>
+
+    <div class="event-types reveal-stagger">
+      <article class="event-type">
+        <div class="ph ph-square" data-img style="--ph-img: url('assets/dining-table.jpg');"></div>
+        <div class="event-type-body">
+          <h3>Weddings</h3>
+          <p>Ceremony under the rose arch, dinner on the lawn, dancing by the pool. We've watched a hundred guests fall under the same spell &mdash; the gate closes, the night opens.</p>
+        </div>
+      </article>
+      <article class="event-type">
+        <div class="ph ph-square" data-img style="--ph-img: url('assets/lawn-fountain.jpg');"></div>
+        <div class="event-type-body">
+          <h3>Corporate Gatherings</h3>
+          <p>Off-sites, summer parties, intimate launches. A walled garden setting that gets people out of meeting rooms and into actual conversation.</p>
+        </div>
+      </article>
+      <article class="event-type">
+        <div class="ph ph-square" data-img style="--ph-img: url('assets/loungers-pool.jpg');"></div>
+        <div class="event-type-body">
+          <h3>Private Parties</h3>
+          <p>Birthdays, anniversaries, baptisms, baby showers. The kind of party where the host gets to actually enjoy themselves.</p>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+.event-types {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.event-type {
+  background: var(--paper);
+}
+.event-type-body { padding: 28px 30px 36px; }
+.event-type h3 { margin-bottom: 12px; font-size: 28px; }
+.event-type p { font-size: 15px; }
+@media (max-width: 880px) { .event-types { grid-template-columns: 1fr; } }
+</style>
+
+<!-- RATE CARD -->
+<section id="rates">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Rate card</span>
+      <h2>Transparent pricing.</h2>
+      <p>All prices in EUR, exclusive of VAT. We'll quote a final figure for your event with everything itemised &mdash; no surprises on the day.</p>
+    </div>
+
+    <div class="rate-grid reveal">
+      <div class="rate-row featured">
+        <div>
+          <div class="eyebrow">Most popular</div>
+          <h3 style="margin-top: 10px;">Full Venue</h3>
+          <p style="margin-top: 8px; font-size: 15px;">Exclusive use of the entire grounds. Lawn, pool deck, gazebo, kitchen.</p>
+        </div>
+        <div class="rate-price serif">€1,200</div>
+      </div>
+      <div class="rate-row">
+        <div>
+          <h3>Lawn Party</h3>
+          <p style="margin-top: 6px; font-size: 15px;">Lawn and gazebo only. Suited to mid-size daytime celebrations.</p>
+        </div>
+        <div class="rate-price serif">€700</div>
+      </div>
+      <div class="rate-row">
+        <div>
+          <h3>Intimate Lawn <span style="color:var(--taupe-dark); font-size: 16px;">· 3 hrs</span></h3>
+          <p style="margin-top: 6px; font-size: 15px;">A short, focused window. Engagement parties, baby showers, birthdays.</p>
+        </div>
+        <div class="rate-price serif">€500</div>
+      </div>
+      <div class="rate-row">
+        <div>
+          <h3>Cleaning</h3>
+          <p style="margin-top: 6px; font-size: 15px;">Post-event clean &mdash; flat fee added to every booking.</p>
+        </div>
+        <div class="rate-price serif">€250</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.rate-grid {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--paper);
+}
+.rate-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 32px;
+  align-items: center;
+  padding: 36px 40px;
+  border-bottom: 1px solid var(--line);
+}
+.rate-row:last-child { border-bottom: none; }
+.rate-row.featured { background: var(--cream); }
+.rate-price {
+  font-size: clamp(36px, 4vw, 52px);
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+.rate-row h3 { font-size: 26px; font-weight: 500; }
+@media (max-width: 600px) {
+  .rate-row { padding: 28px 24px; }
+  .rate-price { font-size: 38px; }
+}
+</style>
+
+<!-- CATERING -->
+<section style="background: var(--cream-deep);">
+  <div class="wrap">
+    <div class="split" style="align-items: start;">
+      <div class="reveal">
+        <span class="eyebrow">Catering &amp; extras</span>
+        <h2 style="margin: 18px 0 24px;">From €35 per person.</h2>
+        <p>Three menus, all built around what's good and local. Choose one, or talk to us about a tasting.</p>
+
+        <div class="menu-list">
+          <div class="menu-item">
+            <div>
+              <h4 class="serif">BBQ Feast</h4>
+              <p style="font-size: 14px; margin-top: 4px;">Grilled meats, charred vegetables, fresh salads, focaccia.</p>
+            </div>
+            <span class="serif">€35pp</span>
+          </div>
+          <div class="menu-item">
+            <div>
+              <h4 class="serif">Pasta Feast</h4>
+              <p style="font-size: 14px; margin-top: 4px;">Two handmade pastas, antipasti boards, regional cheese.</p>
+            </div>
+            <span class="serif">€35pp</span>
+          </div>
+          <div class="menu-item">
+            <div>
+              <h4 class="serif">Fish</h4>
+              <p style="font-size: 14px; margin-top: 4px;">Catch of the day, grilled or baked, with seasonal sides.</p>
+            </div>
+            <span class="serif">€35pp</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="ph ph-tall" data-img style="--ph-img: url('assets/outdoor-kitchen-bbq.jpg');"></div>
+        <div style="margin-top: 28px; padding: 28px; background: var(--paper); border: 1px solid var(--line);">
+          <h4 class="serif" style="font-size: 24px; margin-bottom: 16px;">Also available</h4>
+          <ul style="list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 15px; color: var(--ink-soft);">
+            <li>· DJ &amp; lighting hire</li>
+            <li>· Private chef on request</li>
+            <li>· Floral &amp; styling partners</li>
+            <li>· Photography referrals</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.menu-list { margin-top: 32px; }
+.menu-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: start;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item h4 { font-size: 22px; font-weight: 500; }
+.menu-item span { font-size: 22px; color: var(--ink); }
+</style>
+
+<!-- ENQUIRY CTA -->
+<section style="text-align: center;">
+  <div class="wrap-narrow reveal">
+    <div class="divider" style="margin-bottom: 28px;"><span class="divider-mark">IX</span></div>
+    <h2 style="margin-bottom: 22px;">Hold your date.</h2>
+    <p class="lede" style="margin: 0 auto 40px;">Tell us about your event and we'll come back within a day with availability and a tailored quote.</p>
+    <a href="https://docs.google.com/forms/d/1MDs0Yc04X_3vYHMw3tVAoSmneqoPxvUPE44I9vX3nco/edit" target="_blank" rel="noopener" class="btn btn-primary">Enquire About Your Date <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand"><span class="brand-mark">IX</span><span class="serif">Nine Angels</span></div>
+        <p style="margin-top: 8px; max-width: 32ch;">A private villa in Madliena, Malta. Available for events and stays.</p>
+      </div>
+      <div><h4>Visit</h4><ul>
+        <li><a href="events.html">Events</a></li><li><a href="stays.html">Stays</a></li>
+        <li><a href="gallery.html">Gallery</a></li><li><a href="info.html">Practical Info</a></li>
+      </ul></div>
+      <div><h4>Find us</h4><ul>
+        <li>Madliena Road</li><li>Madliena, Malta</li>
+        <li><a href="https://bit.ly/nineangels" target="_blank" rel="noopener">View on map ↗</a></li>
+      </ul></div>
+      <div><h4>Get in touch</h4><ul>
+        <li><a href="tel:+35679790202">+356 7979 0202</a></li>
+        <li><a href="mailto:info@christianopropertymanagement.com">info@christianopropertymanagement.com</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Nine Angels Villa</span><span class="monogram">— IX —</span></div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

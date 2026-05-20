@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Nine Angels — Hero Exploration</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* Canvas-frame–scoped styles — mirror the live nav + hero so artboards feel native */
+  .ab { width: 1440px; background: var(--paper); font-family: var(--sans); color: var(--ink); position: relative; overflow: hidden; }
+
+  /* shared mini-nav (scaled down from real nav for compactness) */
+  .ab-nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 22px 56px;
+    border-bottom: 1px solid rgba(216,206,188,0.5);
+    background: rgba(250, 247, 241, 0.92);
+    backdrop-filter: saturate(140%) blur(14px);
+    position: relative; z-index: 5;
+  }
+  .ab-nav .brand { font-family: var(--serif); font-size: 22px; display: flex; align-items: center; gap: 12px; }
+  .ab-nav .brand-mark { width: 28px; height: 28px; display:grid; place-items:center; border:1px solid var(--ink); border-radius:50%; font-size:13px; font-style:italic; }
+  .ab-nav ul { display:flex; gap: 32px; list-style:none; font-size: 12px; letter-spacing: 0.05em; color: var(--ink-soft); padding:0; margin:0;}
+  .ab-nav ul li.active { color: var(--ink); border-bottom: 1px solid var(--ink); padding-bottom: 4px; }
+  .ab-nav .cta { font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; padding: 9px 16px; border:1px solid var(--ink); border-radius: 999px; }
+
+  /* Dark nav variant */
+  .ab-nav.on-dark { background: transparent; border-bottom: 1px solid rgba(255,255,255,0.14); position: absolute; left: 0; right: 0; top: 0; z-index: 6; }
+  .ab-nav.on-dark, .ab-nav.on-dark ul, .ab-nav.on-dark .brand, .ab-nav.on-dark .cta { color: rgba(255,255,255,0.92); }
+  .ab-nav.on-dark .brand-mark { border-color: rgba(255,255,255,0.85); }
+  .ab-nav.on-dark .cta { border-color: rgba(255,255,255,0.85); }
+  .ab-nav.on-dark ul li.active { border-bottom-color: #fff; color:#fff; }
+
+  /* shared button look (re-stated for canvas isolation) */
+  .ab .btn { display: inline-flex; align-items:center; gap: 10px; padding: 14px 24px; font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; border-radius: 999px; border: 1px solid transparent; white-space: nowrap; }
+  .ab .btn-primary { background: var(--ink); color: var(--paper); }
+  .ab .btn-outline { color: var(--ink); border-color: var(--ink); background: transparent; }
+  .ab .btn-on-dark-primary { background: #fff; color: var(--ink); }
+  .ab .btn-on-dark-outline { color: #fff; border-color: rgba(255,255,255,0.85); background: transparent; }
+  .ab .arrow { display: inline-block; }
+  .ab h1 { font-family: var(--serif); font-weight: 400; line-height: 1.04; letter-spacing: -0.01em; margin: 0; }
+  .ab h1 em { font-style: italic; font-weight: 300; }
+  .ab .eyebrow { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--taupe-dark); }
+  .ab .eyebrow.on-dark { color: rgba(255,255,255,0.78); }
+  .ab .lede { font-size: 19px; line-height: 1.6; color: var(--ink-soft); font-weight: 300; max-width: 52ch; }
+  .ab .lede.on-dark { color: rgba(255,255,255,0.85); }
+
+  /* ── Variant 1 — Split (current layout, with real aerial photo) ── */
+  .v1 { height: 820px; }
+  .v1 .grid { display: grid; grid-template-columns: 1fr 1.05fr; height: 740px; }
+  .v1 .text { display:flex; flex-direction:column; justify-content:center; padding: 0 90px; gap: 28px; background: var(--paper); }
+  .v1 h1 { font-size: 88px; }
+  .v1 .photo { background: url('assets/pool-aerial.jpg') center/cover; }
+
+  /* ── Variant 2 — Full-bleed aerial, text overlay ── */
+  .v2 { height: 820px; background: url('assets/pool-aerial.jpg') center 35%/cover; position: relative; }
+  .v2::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(20,18,14,0.55) 0%, rgba(20,18,14,0.18) 35%, rgba(20,18,14,0.62) 100%);
+  }
+  .v2 .stack { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 90px 96px; color: #fff; }
+  .v2 h1 { font-size: 96px; color: #fff; max-width: 14ch; }
+  .v2 .lede { color: rgba(255,255,255,0.9); margin: 28px 0 38px; max-width: 48ch; }
+  .v2 .eyebrow { color: rgba(255,255,255,0.78); margin-bottom: 18px; }
+
+  /* ── Variant 3 — Dusk pool, low text strip, more cinematic ── */
+  .v3 { height: 820px; background: url('assets/pool-dusk.jpg') center 55%/cover; position: relative; }
+  .v3::before { content:''; position:absolute; inset:0; background: linear-gradient(180deg, rgba(20,18,14,0.42) 0%, rgba(20,18,14,0) 30%, rgba(20,18,14,0) 55%, rgba(20,18,14,0.78) 100%); }
+  .v3 .stack { position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; padding: 0 90px 80px; color:#fff; }
+  .v3 .meta-row { display:flex; gap: 28px; align-items:center; margin-bottom: 28px; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.78); }
+  .v3 .meta-row .dot { width:4px; height:4px; border-radius:50%; background: var(--rose); }
+  .v3 h1 { font-size: 104px; color:#fff; }
+  .v3 .ctas { display:flex; gap: 14px; margin-top: 36px; }
+
+  /* ── Variant 4 — Asymmetric, photo offset with paper border + caption  ── */
+  .v4 { height: 820px; padding: 0 56px; }
+  .v4 .grid { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 70px; height: 720px; align-items: center; padding-top: 20px; }
+  .v4 .text { display:flex; flex-direction:column; gap: 26px; padding-left: 34px; }
+  .v4 h1 { font-size: 84px; }
+  .v4 .photo-wrap { position: relative; height: 100%; }
+  .v4 .photo { position:absolute; inset: 0 -56px 0 0; background: url('assets/pool-dusk.jpg') center/cover; }
+  .v4 .photo::after { content:''; position:absolute; inset:0; box-shadow: inset 0 0 0 1px rgba(45,42,36,0.06); }
+  .v4 .caption { position:absolute; left: 28px; bottom: 28px; background: rgba(250,247,241,0.94); padding: 14px 18px; border-top: 1px solid var(--rose); font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 11px; letter-spacing: 0.06em; color: var(--ink-soft); }
+  .v4 .scroll-hint { position:absolute; left: 90px; bottom: 40px; font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--taupe-dark); display:flex; align-items:center; gap: 12px; }
+  .v4 .scroll-hint::before { content:''; width: 36px; height:1px; background: var(--taupe); }
+
+  /* ── Variant 5 — Rose arch night, vertical-friendly portrait hero ── */
+  .v5 { height: 820px; padding: 0 56px; }
+  .v5 .grid { display: grid; grid-template-columns: 1fr 0.7fr; gap: 60px; height: 740px; align-items: stretch; padding-top: 0; }
+  .v5 .text { display:flex; flex-direction:column; justify-content: center; gap: 28px; padding-left: 34px; padding-right: 30px; }
+  .v5 h1 { font-size: 86px; }
+  .v5 .photo { background: url('assets/rose-arch-night.jpg') center 40%/cover; height: 100%; position: relative; }
+  .v5 .photo::after {
+    content: 'Rose-arch entrance · evenings';
+    position: absolute; left: 16px; bottom: 18px;
+    background: rgba(20,18,14,0.55); color: #fff;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; padding: 8px 12px;
+    backdrop-filter: blur(4px);
+  }
+  .v5 .accent-row { display:flex; align-items:center; gap:14px; }
+  .v5 .accent-line { flex:0 0 60px; height:1px; background: var(--rose); }
+
+  /* ── Variant 6 — Triptych: three real photos side by side, copy below ── */
+  .v6 { height: 820px; padding: 0; }
+  .v6 .photos { display: grid; grid-template-columns: 1.4fr 1fr 1fr; height: 480px; gap: 4px; padding: 0 4px; }
+  .v6 .photos div { background-size: cover; background-position: center; position: relative; }
+  .v6 .photos div::after { content: attr(data-cap); position:absolute; left: 14px; bottom: 14px; background: rgba(250,247,241,0.92); color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.06em; padding: 6px 10px; }
+  .v6 .p1 { background-image: url('assets/pool-aerial.jpg'); }
+  .v6 .p2 { background-image: url('assets/rose-arch-night.jpg'); background-position: center 30%; }
+  .v6 .p3 { background-image: url('assets/garden-arches.jpg'); }
+  .v6 .text { padding: 50px 90px 0; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: end; }
+  .v6 h1 { font-size: 76px; }
+  .v6 .right { padding-bottom: 14px; display:flex; flex-direction: column; gap: 22px; align-items: flex-start; }
+
+  /* Notes block */
+  .note { font-size: 13px; color: var(--ink-soft); line-height: 1.6; max-width: 64ch; }
+  .note strong { color: var(--ink); font-weight: 500; }
+  .pros { display:grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; font-size: 12px; color: var(--ink-soft); margin-top: 8px; }
+  .pros .ok::before { content:'+ '; color: #5b7a4a; }
+  .pros .meh::before { content:'– '; color: #b06a4a; }
+
+  .compare-card { width: 1440px; padding: 60px 80px; background: var(--cream); display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+  .compare-card h3 { font-family: var(--serif); font-size: 26px; margin-bottom: 12px; }
+  .compare-card .pros { grid-template-columns: 1fr; }
+
+  .swatch-row { display:flex; gap: 8px; }
+  .swatch { width: 80px; height: 80px; background-size: cover; background-position: center; }
+</style>
+</head>
+<body data-screen-label="Hero Exploration">
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="design-canvas.jsx"></script>
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState } = React;
+
+// — reusable nav slices —
+const LightNav = () => (
+  <div className="ab-nav">
+    <div className="brand"><span className="brand-mark">IX</span><span>Nine Angels</span></div>
+    <ul>
+      <li className="active">Home</li><li>Events</li><li>Stays</li><li>Gallery</li><li>Info</li><li>Contact</li>
+    </ul>
+    <span className="cta">Enquire</span>
+  </div>
+);
+const DarkNav = () => (
+  <div className="ab-nav on-dark">
+    <div className="brand"><span className="brand-mark">IX</span><span>Nine Angels</span></div>
+    <ul>
+      <li className="active">Home</li><li>Events</li><li>Stays</li><li>Gallery</li><li>Info</li><li>Contact</li>
+    </ul>
+    <span className="cta">Enquire</span>
+  </div>
+);
+
+// ─────────────── Variant 1 — Split (refined current layout) ───────────────
+const V1 = () => (
+  <div className="ab v1">
+    <LightNav />
+    <div className="grid">
+      <div className="text">
+        <span className="eyebrow">Madliena · Malta</span>
+        <h1 className="serif">Behind the Gate.<br/><em>A World Apart.</em></h1>
+        <p className="lede">A hidden Mediterranean oasis in Madliena. A lagoon pool, lush palm gardens, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
+        <div style={{display:'flex', gap:14, flexWrap:'wrap'}}>
+          <span className="btn btn-primary">Host Your Event <span className="arrow">→</span></span>
+          <span className="btn btn-outline">Book Your Stay <span className="arrow">→</span></span>
+        </div>
+      </div>
+      <div className="photo"></div>
+    </div>
+  </div>
+);
+
+// ─────────────── Variant 2 — Full-bleed aerial ───────────────
+const V2 = () => (
+  <div className="ab v2">
+    <DarkNav />
+    <div className="stack">
+      <span className="eyebrow on-dark">Madliena · Malta · Est. 2010</span>
+      <h1 className="serif">Behind the Gate.<br/><em>A World Apart.</em></h1>
+      <p className="lede on-dark">A hidden Mediterranean oasis. A lagoon pool, lush palm gardens, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
+      <div style={{display:'flex', gap:14, marginTop: 8}}>
+        <span className="btn btn-on-dark-primary">Host Your Event <span className="arrow">→</span></span>
+        <span className="btn btn-on-dark-outline">Book Your Stay <span className="arrow">→</span></span>
+      </div>
+    </div>
+  </div>
+);
+
+// ─────────────── Variant 3 — Cinematic dusk ───────────────
+const V3 = () => (
+  <div className="ab v3">
+    <DarkNav />
+    <div className="stack">
+      <div className="meta-row">
+        <span>Nine Angels Villa</span>
+        <span className="dot"></span>
+        <span>Madliena</span>
+        <span className="dot"></span>
+        <span>A private estate</span>
+      </div>
+      <h1 className="serif" style={{maxWidth:'14ch'}}>Behind the Gate.<br/><em>A World Apart.</em></h1>
+      <div className="ctas">
+        <span className="btn btn-on-dark-primary">Host Your Event <span className="arrow">→</span></span>
+        <span className="btn btn-on-dark-outline">Book Your Stay <span className="arrow">→</span></span>
+      </div>
+    </div>
+  </div>
+);
+
+// ─────────────── Variant 4 — Asymmetric, captioned ───────────────
+const V4 = () => (
+  <div className="ab v4">
+    <LightNav />
+    <div className="grid">
+      <div className="text">
+        <span className="eyebrow">Madliena · Malta</span>
+        <h1 className="serif">Behind the Gate.<br/><em>A World Apart.</em></h1>
+        <p className="lede">A hidden Mediterranean oasis. A lagoon pool, lush palm gardens, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
+        <div style={{display:'flex', gap:14, flexWrap:'wrap'}}>
+          <span className="btn btn-primary">Host Your Event <span className="arrow">→</span></span>
+          <span className="btn btn-outline">Book Your Stay <span className="arrow">→</span></span>
+        </div>
+        <div className="scroll-hint">Scroll to enter</div>
+      </div>
+      <div className="photo-wrap">
+        <div className="photo"></div>
+        <div className="caption">— Lagoon pool · garden · twilight —</div>
+      </div>
+    </div>
+  </div>
+);
+
+// ─────────────── Variant 5 — Rose arch night (event-leaning) ───────────────
+const V5 = () => (
+  <div className="ab v5">
+    <LightNav />
+    <div className="grid">
+      <div className="text">
+        <div className="accent-row"><span className="accent-line"></span><span className="eyebrow">Madliena · Malta</span></div>
+        <h1 className="serif">Behind the Gate.<br/><em>A World Apart.</em></h1>
+        <p className="lede">A hidden Mediterranean oasis. A lagoon pool, a wisteria-lit entrance, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
+        <div style={{display:'flex', gap:14, flexWrap:'wrap'}}>
+          <span className="btn btn-primary">Host Your Event <span className="arrow">→</span></span>
+          <span className="btn btn-outline">Book Your Stay <span className="arrow">→</span></span>
+        </div>
+      </div>
+      <div className="photo"></div>
+    </div>
+  </div>
+);
+
+// ─────────────── Variant 6 — Triptych with dual identity ───────────────
+const V6 = () => (
+  <div className="ab v6">
+    <LightNav />
+    <div className="photos">
+      <div className="p1" data-cap="Lagoon pool · golden hour"></div>
+      <div className="p2" data-cap="Rose arch · evening"></div>
+      <div className="p3" data-cap="Garden archways"></div>
+    </div>
+    <div className="text">
+      <h1 className="serif">Behind the Gate.<br/><em>A World Apart.</em></h1>
+      <div className="right">
+        <p className="lede" style={{fontSize:17, margin:0}}>A hidden Mediterranean oasis in Madliena. Equal parts venue and retreat.</p>
+        <div style={{display:'flex', gap:14, flexWrap:'wrap'}}>
+          <span className="btn btn-primary">Host Your Event <span className="arrow">→</span></span>
+          <span className="btn btn-outline">Book Your Stay <span className="arrow">→</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ─────────────── Notes / candidate-photo card ───────────────
+const Notes = () => (
+  <div className="compare-card">
+    <div>
+      <span className="eyebrow" style={{display:'block', marginBottom: 14}}>The brief</span>
+      <h3 className="serif">Pick a hero, with eyes open.</h3>
+      <p className="note">Six options on the same homepage frame, drawing from the real villa library. Each balances <strong>which photo</strong> against <strong>which layout</strong> — because the right photo in the wrong layout still misses.</p>
+      <div style={{marginTop: 22}}>
+        <span className="eyebrow" style={{display:'block', marginBottom:10}}>Photos in play</span>
+        <div className="swatch-row">
+          <div className="swatch" style={{backgroundImage:'url(assets/pool-aerial.jpg)'}} title="pool-aerial"></div>
+          <div className="swatch" style={{backgroundImage:'url(assets/pool-dusk.jpg)'}} title="pool-dusk"></div>
+          <div className="swatch" style={{backgroundImage:'url(assets/rose-arch-night.jpg)'}} title="rose-arch-night"></div>
+          <div className="swatch" style={{backgroundImage:'url(assets/garden-arches.jpg)'}} title="garden-arches"></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <span className="eyebrow" style={{display:'block', marginBottom: 14}}>Recommendation</span>
+      <h3 className="serif">Variant 02 — full-bleed aerial.</h3>
+      <p className="note">The aerial reads <strong>uniquely Nine Angels</strong> — the lagoon-shaped pool is the property's most recognisable feature, and a drone angle says "private estate" in a way no ground shot can. Full-bleed treatment lets the photo breathe; the lower-thirds copy stack avoids the cropped-pool problem.</p>
+      <div className="pros">
+        <span className="ok">Iconic lagoon shape visible</span>
+        <span className="ok">Sells "private oasis" instantly</span>
+        <span className="ok">Works for both Events + Stays</span>
+        <span className="meh">Loses some text contrast vs split</span>
+      </div>
+    </div>
+    <div>
+      <span className="eyebrow" style={{display:'block', marginBottom: 14}}>Strong alternates</span>
+      <h3 className="serif">If we want a different feeling.</h3>
+      <p className="note"><strong>Variant 03</strong> (dusk) leans romantic, slower, more boutique-hotel — better if Stays is the priority. <strong>Variant 05</strong> (rose arch) is the strongest pure-events lead, but skews seasonal.</p>
+      <p className="note" style={{marginTop:10}}><strong>Avoid</strong> the split layout (V01) with the existing photo crop — the pool gets clipped awkwardly at narrow widths.</p>
+    </div>
+  </div>
+);
+
+// ─────────────── Canvas ───────────────
+const App = () => (
+  <DesignCanvas title="Nine Angels — Hero Exploration" subtitle="Six photo + layout variations · 1440×820 each">
+    <DCSection id="splits" title="Split layouts" subtitle="Photo + copy in two columns (the current site pattern)">
+      <DCArtboard id="v1" label="01 · Split — pool-aerial" width={1440} height={820}><V1/></DCArtboard>
+      <DCArtboard id="v4" label="04 · Asymmetric — pool-dusk" width={1440} height={820}><V4/></DCArtboard>
+      <DCArtboard id="v5" label="05 · Split — rose-arch-night" width={1440} height={820}><V5/></DCArtboard>
+    </DCSection>
+
+    <DCSection id="bleeds" title="Full-bleed photography" subtitle="Photo edge-to-edge, copy overlaid">
+      <DCArtboard id="v2" label="02 · Full-bleed — pool-aerial  ★ recommended" width={1440} height={820}><V2/></DCArtboard>
+      <DCArtboard id="v3" label="03 · Cinematic — pool-dusk" width={1440} height={820}><V3/></DCArtboard>
+    </DCSection>
+
+    <DCSection id="composed" title="Composed" subtitle="Multiple photos at once — when one image won't tell the story">
+      <DCArtboard id="v6" label="06 · Triptych — pool + arch + garden" width={1440} height={820}><V6/></DCArtboard>
+    </DCSection>
+
+    <DCSection id="rationale" title="Rationale" subtitle="Photo-led notes and recommendation">
+      <DCArtboard id="notes" label="Notes" width={1440} height={420}><Notes/></DCArtboard>
+    </DCSection>
+  </DesignCanvas>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
