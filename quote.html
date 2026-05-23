@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Request a Quotation - Nine Angels Villa</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── Quotation form ──────────────────────────────── */
+  .quote-shell {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    min-height: calc(100vh - 73px);
+    background: var(--paper);
+  }
+  .quote-form-side {
+    padding: clamp(48px, 7vw, 96px) clamp(32px, 6vw, 90px);
+    display: flex; flex-direction: column;
+    min-height: 0;
+  }
+  .quote-aside {
+    position: relative;
+    background: #1a1814 url('assets/rose-arch-night.jpg') center 35%/cover no-repeat;
+    overflow: hidden;
+  }
+  .quote-aside::before {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(170deg, rgba(20,18,14,0.25) 0%, rgba(20,18,14,0.55) 100%);
+  }
+  .quote-aside-inner {
+    position: relative; z-index: 1;
+    padding: clamp(48px, 7vw, 96px) clamp(32px, 5vw, 64px);
+    color: #fff;
+    height: 100%;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 540px;
+  }
+  .quote-aside .eyebrow { color: rgba(255,255,255,0.78); }
+  .quote-aside h2 { color: #fff; max-width: 14ch; }
+  .quote-aside .promise {
+    border-top: 1px solid rgba(255,255,255,0.25);
+    padding-top: 28px; max-width: 38ch;
+  }
+  .quote-aside .promise .num {
+    font-family: var(--serif); font-size: 64px; line-height: 1; color: #fff;
+    display: block; margin-bottom: 6px; letter-spacing: -0.02em;
+  }
+  .quote-aside .promise p { color: rgba(255,255,255,0.85); font-size: 15px; }
+
+  /* Header inside the form side */
+  .quote-head { margin-bottom: 44px; }
+  .quote-head h1 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(40px, 4.5vw, 60px);
+    line-height: 1.06; letter-spacing: -0.01em; margin: 10px 0 14px;
+  }
+  .quote-head h1 em { font-style: italic; font-weight: 300; }
+  .quote-head p { font-size: 16px; color: var(--ink-soft); max-width: 52ch; }
+
+  /* Step indicator */
+  .steps {
+    display: flex; align-items: center; gap: 18px;
+    margin-bottom: 36px;
+    font-family: var(--sans); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--taupe-dark);
+  }
+  .steps .step { display:flex; align-items: center; gap: 10px; opacity: 0.4; transition: opacity 0.4s; }
+  .steps .step.active, .steps .step.done { opacity: 1; }
+  .steps .step .dot {
+    width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--taupe);
+    display: grid; place-items: center; font-family: var(--serif); font-size: 12px; font-style: italic;
+    color: var(--ink-soft); background: var(--paper);
+    transition: all 0.3s;
+  }
+  .steps .step.active .dot { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+  .steps .step.done .dot { border-color: var(--ink); background: var(--paper); color: var(--ink); }
+  .steps .bar { flex: 0 1 40px; height: 1px; background: var(--line); }
+
+  /* Step panels */
+  .panel { display: none; flex-direction: column; gap: 24px; animation: panelIn 0.4s cubic-bezier(0.22,0.61,0.36,1); }
+  .panel.active { display: flex; }
+  @keyframes panelIn { from { opacity:0; transform: translateY(8px);} to { opacity:1; transform: translateY(0);} }
+
+  /* Field groups */
+  .fld { display: flex; flex-direction: column; gap: 8px; }
+  .fld > label {
+    font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.22em;
+    text-transform: uppercase; color: var(--taupe-dark);
+  }
+  .fld > label .req { color: var(--rose); margin-left: 4px; }
+  .fld .hint { font-size: 12px; color: var(--taupe-dark); }
+
+  .fld-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 600px) { .fld-row { grid-template-columns: 1fr; } }
+
+  /* Inputs */
+  .ip, .ta, select.ip {
+    font-family: var(--sans); font-size: 16px; font-weight: 300; color: var(--ink);
+    background: var(--paper);
+    border: 0; border-bottom: 1px solid var(--line);
+    padding: 10px 0 12px;
+    width: 100%; outline: none;
+    transition: border-color 0.2s, background 0.2s;
+    border-radius: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  select.ip {
+    background-image: linear-gradient(45deg, transparent 50%, var(--taupe-dark) 50%),
+                      linear-gradient(135deg, var(--taupe-dark) 50%, transparent 50%);
+    background-position: calc(100% - 16px) center, calc(100% - 10px) center;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+    padding-right: 28px;
+  }
+  .ta { resize: vertical; min-height: 110px; line-height: 1.55; padding-top: 12px; }
+  .ip:focus, .ta:focus, select.ip:focus { border-bottom-color: var(--ink); }
+  .ip::placeholder, .ta::placeholder { color: var(--taupe); font-weight: 300; }
+
+  /* Option cards (radio replacement) */
+  .opt-grid { display: grid; gap: 10px; }
+  .opt-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .opt-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .opt-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 600px) { .opt-grid.cols-3, .opt-grid.cols-4 { grid-template-columns: repeat(2, 1fr); } }
+
+  .opt {
+    display: flex; flex-direction: column; gap: 6px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    border-radius: 2px;
+  }
+  .opt:hover { border-color: var(--taupe); background: rgba(245,240,232,0.4); }
+  .opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .opt .opt-title { font-family: var(--serif); font-size: 19px; color: var(--ink); font-weight: 500; line-height: 1.2; }
+  .opt .opt-sub { font-size: 12px; color: var(--taupe-dark); }
+  .opt .opt-price { font-family: var(--serif); font-size: 22px; color: var(--ink); margin-left: auto; }
+  .opt.has-price { flex-direction: row; align-items: center; justify-content: space-between; }
+  .opt.has-price > div { display: flex; flex-direction: column; gap: 4px; }
+  .opt input:checked ~ * { /* no-op, used below */ }
+  .opt:has(input:checked) {
+    border-color: var(--ink); background: var(--cream);
+    box-shadow: inset 0 0 0 1px var(--ink);
+  }
+  .opt:has(input:checked) .opt-title { color: var(--ink); }
+  .opt:has(input:checked)::after {
+    content: '✓'; position: absolute; top: 10px; right: 12px;
+    font-size: 12px; color: var(--ink); font-family: var(--sans); font-weight: 500;
+  }
+  .opt.has-price:has(input:checked)::after { display: none; }
+
+  /* Compact option (chip style for extras) */
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip {
+    position: relative; cursor: pointer;
+    padding: 10px 18px; border: 1px solid var(--line); border-radius: 999px;
+    font-size: 13px; color: var(--ink-soft); background: var(--paper);
+    transition: all 0.2s;
+  }
+  .chip input { position: absolute; opacity: 0; pointer-events: none; }
+  .chip:hover { border-color: var(--taupe); }
+  .chip:has(input:checked) {
+    background: var(--ink); color: var(--paper); border-color: var(--ink);
+  }
+
+  /* Footer / nav */
+  .quote-foot {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line);
+  }
+  .quote-foot .meta { font-size: 12px; color: var(--taupe-dark); letter-spacing: 0.04em; }
+  .quote-foot .actions { display: flex; gap: 12px; }
+  .btn-back {
+    background: transparent; border: 0; cursor: pointer;
+    font-family: var(--sans); font-size: 12px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-soft);
+    padding: 12px 0;
+  }
+  .btn-back:hover { color: var(--ink); }
+  .btn-back::before { content: '← '; }
+
+  /* Errors */
+  .err {
+    font-size: 12px; color: #b06a4a; margin-top: 4px; min-height: 16px;
+  }
+  .ip.invalid, .ta.invalid, select.ip.invalid { border-bottom-color: #b06a4a; }
+
+  /* Thank-you state */
+  .thanks {
+    display: none;
+    flex-direction: column; align-items: flex-start;
+    padding: 40px 0;
+    animation: panelIn 0.5s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  .thanks.show { display: flex; }
+  .thanks .ix-mark {
+    width: 64px; height: 64px; border-radius: 50%;
+    border: 1px solid var(--ink); display: grid; place-items: center;
+    font-family: var(--serif); font-style: italic; font-size: 26px;
+    margin-bottom: 32px;
+  }
+  .thanks h1 { font-family: var(--serif); font-size: clamp(40px, 4.5vw, 60px); line-height: 1.06; margin-bottom: 18px; max-width: 16ch; }
+  .thanks h1 em { font-style: italic; font-weight: 300; }
+  .thanks .ref {
+    margin-top: 32px; padding: 22px 26px; background: var(--cream); border-left: 2px solid var(--rose);
+    width: 100%; max-width: 460px;
+  }
+  .thanks .ref .lbl { font-family: var(--sans); font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--taupe-dark); }
+  .thanks .ref .ref-no { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 18px; color: var(--ink); margin-top: 6px; letter-spacing: 0.04em; }
+  .thanks .what-next { margin-top: 36px; }
+  .thanks .what-next h4 { font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--taupe-dark); margin-bottom: 14px; }
+  .thanks .what-next ol { list-style: none; padding: 0; counter-reset: nx; display: flex; flex-direction: column; gap: 14px; max-width: 52ch; }
+  .thanks .what-next ol li { counter-increment: nx; position: relative; padding-left: 38px; font-size: 15px; color: var(--ink-soft); line-height: 1.6; }
+  .thanks .what-next ol li::before {
+    content: counter(nx, decimal-leading-zero);
+    position: absolute; left: 0; top: 1px;
+    font-family: var(--serif); font-style: italic; color: var(--taupe-dark);
+    font-size: 16px;
+  }
+  .thanks .thanks-actions { margin-top: 40px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+  /* Mobile */
+  @media (max-width: 880px) {
+    .quote-shell { grid-template-columns: 1fr; }
+    .quote-aside { display: none; }
+  }
+</style>
+</head>
+<body data-screen-label="Quotation Form">
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">IX</span><span>Nine Angels</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html" class="active">Events</a></li>
+      <li><a href="stays.html">Stays</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="info.html">Info</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="quote.html" class="nav-cta">Enquire</a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+  <div class="mobile-menu">
+    <a href="index.html">Home</a><a href="events.html">Events</a><a href="stays.html">Stays</a>
+    <a href="gallery.html">Gallery</a><a href="info.html">Info</a><a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- QUOTE SHELL -->
+<main class="quote-shell">
+  <div class="quote-form-side">
+
+    <!-- HEADER + STEPS (hidden after submit) -->
+    <div id="formHeader">
+      <div class="quote-head">
+        <span class="eyebrow">Request a quotation</span>
+        <h1 class="serif">Tell us about<br/><em>your day.</em></h1>
+        <p>Three short steps. We'll come back within 24 hours with availability and a tailored quote - no obligation.</p>
+      </div>
+
+      <nav class="steps" aria-label="Form progress">
+        <div class="step active" data-step="1"><span class="dot">i</span><span>Your event</span></div>
+        <div class="bar"></div>
+        <div class="step" data-step="2"><span class="dot">ii</span><span>The details</span></div>
+        <div class="bar"></div>
+        <div class="step" data-step="3"><span class="dot">iii</span><span>How to reach you</span></div>
+      </nav>
+    </div>
+
+    <!-- FORM -->
+    <form id="quoteForm" novalidate>
+
+      <!-- ── STEP 1 ── -->
+      <div class="panel active" data-panel="1">
+        <div class="fld">
+          <label>What are we hosting? <span class="req">*</span></label>
+          <div class="opt-grid cols-4" role="radiogroup" aria-label="Event type">
+            <label class="opt"><input type="radio" name="eventType" value="Wedding" required/>
+              <span class="opt-title">Wedding</span><span class="opt-sub">Ceremony &amp; reception</span></label>
+            <label class="opt"><input type="radio" name="eventType" value="Corporate"/>
+              <span class="opt-title">Corporate</span><span class="opt-sub">Off-site, party, launch</span></label>
+            <label class="opt"><input type="radio" name="eventType" value="Private Party"/>
+              <span class="opt-title">Private</span><span class="opt-sub">Birthday, anniversary…</span></label>
+            <label class="opt"><input type="radio" name="eventType" value="Other"/>
+              <span class="opt-title">Something else</span><span class="opt-sub">Tell us in step 2</span></label>
+          </div>
+          <div class="err" data-err="eventType"></div>
+        </div>
+
+        <div class="fld-row">
+          <div class="fld">
+            <label for="eventDate">Preferred date <span class="req">*</span></label>
+            <input class="ip" id="eventDate" name="eventDate" type="date" required min="2026-05-22"/>
+            <span class="hint">Events run September through June.</span>
+            <div class="err" data-err="eventDate"></div>
+          </div>
+          <div class="fld">
+            <label for="flexibility">How flexible?</label>
+            <select class="ip" id="flexibility" name="flexibility">
+              <option value="That date or nothing">That date or nothing</option>
+              <option value="A week either side">A week either side</option>
+              <option value="Within a month">Within a month</option>
+              <option value="Open to suggestions" selected>Open to suggestions</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fld-row">
+          <div class="fld">
+            <label for="guests">Approximate guests <span class="req">*</span></label>
+            <input class="ip" id="guests" name="guests" type="number" min="2" max="200" placeholder="e.g. 60" required/>
+            <span class="hint">Up to 100 comfortably. Larger numbers, talk to us.</span>
+            <div class="err" data-err="guests"></div>
+          </div>
+          <div class="fld">
+            <label for="package">Which package fits?</label>
+            <select class="ip" id="package" name="package">
+              <option value="Not sure yet" selected>Not sure yet - help me choose</option>
+              <option value="Full Venue · €1,200">Full Venue · €1,200</option>
+              <option value="Lawn Party · €700">Lawn Party · €700</option>
+              <option value="Intimate Lawn · €500">Intimate Lawn (3 hrs) · €500</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── STEP 2 ── -->
+      <div class="panel" data-panel="2">
+        <div class="fld">
+          <label>Catering preference</label>
+          <div class="opt-grid cols-3" role="radiogroup" aria-label="Catering preference">
+            <label class="opt"><input type="radio" name="catering" value="BBQ Feast (€35pp)"/>
+              <span class="opt-title">BBQ</span><span class="opt-sub">Grilled meats &amp; veg · €35pp</span></label>
+            <label class="opt"><input type="radio" name="catering" value="Pasta Feast (€35pp)"/>
+              <span class="opt-title">Pasta</span><span class="opt-sub">Handmade pasta · €35pp</span></label>
+            <label class="opt"><input type="radio" name="catering" value="Fish (€35pp)"/>
+              <span class="opt-title">Fish</span><span class="opt-sub">Catch of the day · €35pp</span></label>
+            <label class="opt"><input type="radio" name="catering" value="Our own caterer"/>
+              <span class="opt-title">Own caterer</span><span class="opt-sub">We'll bring our own</span></label>
+            <label class="opt"><input type="radio" name="catering" value="Private chef"/>
+              <span class="opt-title">Private chef</span><span class="opt-sub">Talk to us</span></label>
+            <label class="opt"><input type="radio" name="catering" value="To discuss" checked/>
+              <span class="opt-title">To discuss</span><span class="opt-sub">Help us decide</span></label>
+          </div>
+        </div>
+
+        <div class="fld">
+          <label>Anything extra you'd like</label>
+          <div class="chip-grid" id="extras">
+            <label class="chip"><input type="checkbox" name="extras" value="DJ &amp; lighting"/>DJ &amp; lighting</label>
+            <label class="chip"><input type="checkbox" name="extras" value="Photography"/>Photography</label>
+            <label class="chip"><input type="checkbox" name="extras" value="Florist &amp; styling"/>Florist &amp; styling</label>
+            <label class="chip"><input type="checkbox" name="extras" value="Live music"/>Live music</label>
+            <label class="chip"><input type="checkbox" name="extras" value="On-site coordinator"/>On-site coordinator</label>
+            <label class="chip"><input type="checkbox" name="extras" value="Bar service"/>Bar service</label>
+            <label class="chip"><input type="checkbox" name="extras" value="Site visit before booking"/>Site visit</label>
+          </div>
+        </div>
+
+        <div class="fld">
+          <label for="notes">Tell us more <span class="hint">(optional)</span></label>
+          <textarea class="ta" id="notes" name="notes" placeholder="The vibe you're after, any special requests, anything we should know - the more we know, the more accurate the quote."></textarea>
+        </div>
+      </div>
+
+      <!-- ── STEP 3 ── -->
+      <div class="panel" data-panel="3">
+        <div class="fld-row">
+          <div class="fld">
+            <label for="name">Your name <span class="req">*</span></label>
+            <input class="ip" id="name" name="name" type="text" required autocomplete="name" placeholder="First and last"/>
+            <div class="err" data-err="name"></div>
+          </div>
+          <div class="fld">
+            <label for="phone">Phone</label>
+            <input class="ip" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+356 …"/>
+          </div>
+        </div>
+
+        <div class="fld">
+          <label for="email">Email <span class="req">*</span></label>
+          <input class="ip" id="email" name="email" type="email" required autocomplete="email" placeholder="you@domain.com"/>
+          <span class="hint">We'll send a confirmation here, and reply within 24 hours.</span>
+          <div class="err" data-err="email"></div>
+        </div>
+
+        <div class="fld">
+          <label for="source">How did you hear about us? <span class="hint">(optional)</span></label>
+          <select class="ip" id="source" name="source">
+            <option value="">Choose one</option>
+            <option>Word of mouth</option>
+            <option>Instagram</option>
+            <option>Google</option>
+            <option>Wedding planner / supplier</option>
+            <option>Returning guest</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="fld">
+          <label style="display:flex; gap: 10px; align-items: flex-start; cursor: pointer; text-transform: none; letter-spacing: normal; font-size: 13px; color: var(--ink-soft); font-weight: 300;">
+            <input type="checkbox" id="consent" name="consent" required style="margin-top: 4px;"/>
+            <span>I'm happy for Nine Angels Villa to contact me about this enquiry. We won't share your details.</span>
+          </label>
+          <div class="err" data-err="consent"></div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="quote-foot">
+        <div class="meta"><span id="stepLabel">Step 1 of 3</span></div>
+        <div class="actions">
+          <button type="button" class="btn-back" id="btnBack" hidden>Back</button>
+          <button type="button" class="btn btn-primary" id="btnNext">Continue <span class="arrow">→</span></button>
+          <button type="submit" class="btn btn-primary" id="btnSubmit" hidden>Send my enquiry <span class="arrow">→</span></button>
+        </div>
+      </div>
+    </form>
+
+    <!-- THANK-YOU -->
+    <section class="thanks" id="thanks" aria-live="polite">
+      <div class="ix-mark">IX</div>
+      <span class="eyebrow">Received with thanks</span>
+      <h1 class="serif" style="margin-top: 14px;">Thank you, <span id="thanksName">friend</span>.<br/><em>We've got it from here.</em></h1>
+      <p class="lede" style="font-size: 18px; max-width: 52ch;">
+        Your enquiry is in. You'll have a reply at <strong id="thanksEmail" style="font-weight: 500; color: var(--ink);">your inbox</strong> within 24 hours - usually much sooner.
+      </p>
+
+      <div class="ref">
+        <div class="lbl">Your reference</div>
+        <div class="ref-no" id="thanksRef">NA-XXXXX</div>
+      </div>
+
+      <div class="what-next">
+        <h4>What happens next</h4>
+        <ol>
+          <li>We check the date against our calendar and reply by email within 24 hours.</li>
+          <li>If everything lines up, we'll send a tailored quote with everything itemised.</li>
+          <li>You'll be invited for a site visit - in person or by video - before anything is booked.</li>
+        </ol>
+      </div>
+
+      <div class="thanks-actions">
+        <a href="index.html" class="btn btn-outline">Back to the villa <span class="arrow">→</span></a>
+        <a href="gallery.html" class="btn-back" style="padding-left: 4px;">Browse the gallery</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ASIDE / PHOTO -->
+  <aside class="quote-aside" aria-hidden="true">
+    <div class="quote-aside-inner">
+      <div>
+        <span class="eyebrow">Madliena · Malta</span>
+        <h2 class="serif" style="margin-top: 14px; font-size: clamp(36px, 4vw, 56px); line-height: 1.06;">Behind the gate,<br/><em style="font-weight:300">your day, unfolding.</em></h2>
+      </div>
+
+      <div class="promise">
+        <span class="num">24h</span>
+        <span class="eyebrow" style="display:block; color: rgba(255,255,255,0.78); margin-bottom: 10px;">Our promise</span>
+        <p>Every enquiry gets a personal reply within a working day. We don't believe in form letters or week-long silences.</p>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<!-- FOOTER (compact) -->
+<footer class="footer" style="margin-top: 0;">
+  <div class="wrap">
+    <div class="footer-bottom" style="padding: 0;">
+      <span>© 2026 Nine Angels Villa · Madliena, Malta</span>
+      <span><a href="mailto:info@christianopropertymanagement.com">info@christianopropertymanagement.com</a></span>
+      <span class="monogram">— IX —</span>
+    </div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script src="quote.js"></script>
+</body>
+</html>

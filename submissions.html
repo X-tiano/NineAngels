@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Submissions - Nine Angels Villa</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+  /* ── Submissions admin ────────────────────────────── */
+  .admin-shell { padding: 60px 0 120px; min-height: 80vh; }
+  .admin-head {
+    display: flex; align-items: end; justify-content: space-between; gap: 24px;
+    margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .admin-head .left { max-width: 60ch; }
+  .admin-head h1 { font-size: clamp(40px, 4.5vw, 60px); margin: 14px 0 12px; }
+  .admin-head h1 em { font-style: italic; font-weight: 300; }
+  .admin-head p { font-size: 15px; color: var(--ink-soft); }
+
+  .admin-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .admin-actions .btn { padding: 12px 22px; }
+  .ip-search {
+    border: 1px solid var(--line); padding: 12px 16px;
+    font-family: var(--sans); font-size: 14px; color: var(--ink);
+    background: var(--paper); min-width: 240px; border-radius: 2px;
+    outline: none;
+  }
+  .ip-search:focus { border-color: var(--ink); }
+
+  /* Backend status pill */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 8px 14px; border-radius: 999px;
+    border: 1px solid var(--line); color: var(--ink-soft);
+    background: var(--paper);
+  }
+  .status-pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--taupe); }
+  .status-pill.ok .dot { background: #5b7a4a; }
+  .status-pill.warn .dot { background: #c89a3a; }
+
+  /* Table */
+  .subs-wrap { overflow-x: auto; }
+  table.subs {
+    width: 100%; border-collapse: collapse; background: var(--paper);
+    border: 1px solid var(--line); font-size: 14px;
+  }
+  table.subs thead th {
+    text-align: left; font-family: var(--sans); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--taupe-dark);
+    padding: 16px 18px; border-bottom: 1px solid var(--line); background: var(--cream);
+    white-space: nowrap;
+  }
+  table.subs tbody tr {
+    border-bottom: 1px solid var(--line);
+    transition: background 0.15s;
+  }
+  table.subs tbody tr:last-child { border-bottom: none; }
+  table.subs tbody tr:hover { background: rgba(245, 240, 232, 0.5); cursor: pointer; }
+  table.subs td { padding: 18px; vertical-align: top; color: var(--ink); }
+  table.subs td .sub-name { font-family: var(--serif); font-size: 19px; color: var(--ink); line-height: 1.2; }
+  table.subs td .sub-email { font-size: 13px; color: var(--ink-soft); margin-top: 2px; }
+  table.subs td .meta { font-size: 12px; color: var(--taupe-dark); }
+  table.subs .ref { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 11px; color: var(--taupe-dark); }
+
+  .type-pill {
+    display: inline-block; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px;
+    background: var(--cream); color: var(--ink-soft);
+  }
+
+  /* Empty state */
+  .empty {
+    text-align: center; padding: 80px 24px;
+    border: 1px dashed var(--line); border-radius: 4px;
+    background: var(--paper);
+  }
+  .empty h3 { font-size: 30px; margin: 18px 0 12px; }
+  .empty p { max-width: 52ch; margin: 0 auto; font-size: 15px; }
+  .empty .ix-mark {
+    width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--ink);
+    display: grid; place-items: center; font-family: var(--serif); font-style: italic; font-size: 22px;
+    margin: 0 auto;
+  }
+
+  /* Modal (detail view) */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(20,18,14,0.55);
+    display: none; align-items: flex-start; justify-content: center;
+    z-index: 200; padding: 60px 24px; overflow-y: auto;
+    backdrop-filter: blur(4px);
+  }
+  .modal-backdrop.show { display: flex; }
+  .modal {
+    background: var(--paper); max-width: 720px; width: 100%;
+    border: 1px solid var(--line);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.4);
+    animation: modalIn 0.3s cubic-bezier(0.22,0.61,0.36,1);
+  }
+  @keyframes modalIn { from { opacity:0; transform: translateY(20px);} to { opacity:1; transform: translateY(0);} }
+  .modal-head {
+    display: flex; align-items: start; justify-content: space-between; gap: 20px;
+    padding: 36px 40px 24px; border-bottom: 1px solid var(--line);
+  }
+  .modal-head h2 { font-size: 36px; line-height: 1.1; margin: 0; }
+  .modal-head h2 em { font-style: italic; font-weight: 300; }
+  .modal-head .ref { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--taupe-dark); margin-top: 6px; letter-spacing: 0.04em; }
+  .modal-close {
+    background: none; border: 1px solid var(--line); width: 36px; height: 36px;
+    border-radius: 50%; cursor: pointer; font-size: 16px; color: var(--ink-soft);
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: var(--cream); color: var(--ink); }
+  .modal-body { padding: 32px 40px; }
+  .modal-body dl { display: grid; grid-template-columns: 160px 1fr; gap: 14px 24px; }
+  .modal-body dt {
+    font-family: var(--sans); font-size: 11px; font-weight: 500;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--taupe-dark);
+    padding-top: 4px;
+  }
+  .modal-body dd { font-size: 15px; color: var(--ink); margin: 0; line-height: 1.55; }
+  .modal-body dd.notes { white-space: pre-wrap; padding: 12px 16px; background: var(--cream); border-left: 2px solid var(--rose); font-size: 14px; line-height: 1.6; }
+  .modal-body dd.empty-val { color: var(--taupe); font-style: italic; }
+  .modal-foot {
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    padding: 24px 40px 36px; border-top: 1px solid var(--line);
+  }
+  .modal-foot .left { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* Backend note panel */
+  .backend-note {
+    margin-top: 60px; padding: 36px 40px; background: var(--cream-deep);
+    border: 1px solid var(--line);
+  }
+  .backend-note h3 { font-size: 24px; margin-bottom: 12px; }
+  .backend-note p { font-size: 14px; max-width: 70ch; }
+  .backend-note ol { margin: 18px 0 0 0; padding-left: 22px; font-size: 14px; color: var(--ink-soft); }
+  .backend-note ol li { padding: 6px 0; line-height: 1.6; }
+  .backend-note code { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 12px; background: var(--paper); padding: 2px 6px; border: 1px solid var(--line); border-radius: 2px; }
+
+  @media (max-width: 700px) {
+    .modal-body dl { grid-template-columns: 1fr; gap: 4px; }
+    .modal-body dt { padding-top: 12px; }
+    .admin-head { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body data-screen-label="Submissions Admin">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">IX</span><span>Nine Angels</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="stays.html">Stays</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="info.html">Info</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="quote.html" class="nav-cta">Enquire</a>
+    <button class="nav-toggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<section class="admin-shell">
+  <div class="wrap">
+
+    <header class="admin-head">
+      <div class="left">
+        <span class="eyebrow">Internal · Admin</span>
+        <h1 class="serif">Quotation<br/><em>submissions.</em></h1>
+        <p>Every enquiry submitted through the website. Click a row to see the full detail, reply by email, or export the lot to CSV.</p>
+      </div>
+      <div class="admin-actions">
+        <span class="status-pill" id="statusPill"><span class="dot"></span><span id="statusLabel">Local only</span></span>
+        <input class="ip-search" id="search" placeholder="Search name, email, type…"/>
+        <button class="btn btn-outline" id="btnExport">Export CSV</button>
+      </div>
+    </header>
+
+    <div id="content"></div>
+
+    <!-- Backend wiring instructions -->
+    <aside class="backend-note">
+      <span class="eyebrow">Once you're ready to go live</span>
+      <h3 class="serif">Activating real email delivery</h3>
+      <p>Right now, submissions are stored locally in this browser only — fine for testing. To forward every enquiry to <code>info@christianopropertymanagement.com</code> and auto-reply to the sender, do this once:</p>
+      <ol>
+        <li>Sign up at <strong>formspree.io</strong> (free plan is plenty for low volume).</li>
+        <li>Create a new form pointing to <code>info@christianopropertymanagement.com</code>. Copy the form ID (looks like <code>mvolwabq</code>).</li>
+        <li>Open <code>quote.js</code> and paste it into <code>CONFIG.formspreeId</code>.</li>
+        <li>In Formspree → form settings → <strong>Autoresponse</strong>, paste the thank-you email body shown at the bottom of <code>quote.js</code> (it promises a reply within 24 hours).</li>
+        <li>Formspree's dashboard then becomes your permanent, multi-device submissions log — this admin page stays as a local mirror.</li>
+      </ol>
+    </aside>
+  </div>
+</section>
+
+<!-- DETAIL MODAL -->
+<div class="modal-backdrop" id="modal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <span class="eyebrow" id="mPill">Enquiry</span>
+        <h2 class="serif" id="mTitle">—</h2>
+        <div class="ref" id="mRef">—</div>
+      </div>
+      <button class="modal-close" id="mClose" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <dl id="mFields"></dl>
+    </div>
+    <div class="modal-foot">
+      <div class="left">
+        <a href="#" class="btn btn-primary" id="mReply">Reply by email <span class="arrow">→</span></a>
+        <a href="#" class="btn btn-outline" id="mCall">Call</a>
+      </div>
+      <button class="btn-back" id="mDelete" style="color: #b06a4a;">Delete</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer" style="margin-top: 0;">
+  <div class="wrap">
+    <div class="footer-bottom" style="padding: 0;">
+      <span>© 2026 Nine Angels Villa · Internal admin</span>
+      <span class="monogram">— IX —</span>
+    </div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+<script>
+(() => {
+  const STORAGE_KEY = 'nine-angels-submissions';
+  const content   = document.getElementById('content');
+  const search    = document.getElementById('search');
+  const btnExport = document.getElementById('btnExport');
+  const statusPill = document.getElementById('statusPill');
+  const statusLabel = document.getElementById('statusLabel');
+
+  // ── Status (Formspree configured?) ──────────────────
+  // We read quote.js heuristically: if CONFIG.formspreeId is set, status is "Live".
+  // Cheap check: fetch quote.js and look for a non-empty formspreeId.
+  fetch('quote.js').then(r => r.text()).then(src => {
+    const m = src.match(/formspreeId:\s*'([^']*)'/);
+    if (m && m[1]) {
+      statusPill.classList.add('ok');
+      statusLabel.textContent = 'Live · forwarding to inbox';
+    } else {
+      statusPill.classList.add('warn');
+      statusLabel.textContent = 'Local only · not yet forwarding';
+    }
+  }).catch(() => {});
+
+  // ── Data ────────────────────────────────────────────
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+    catch { return []; }
+  }
+  function save(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    const d = new Date(iso);
+    return d.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+  function fmtEventDate(s) {
+    if (!s) return '—';
+    const d = new Date(s);
+    return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+
+  // ── Render ──────────────────────────────────────────
+  function render() {
+    const q = search.value.trim().toLowerCase();
+    const all = load();
+    const list = q
+      ? all.filter(s => [s.name, s.email, s.eventType, s.notes, s.id].join(' ').toLowerCase().includes(q))
+      : all;
+
+    if (all.length === 0) {
+      content.innerHTML = `
+        <div class="empty">
+          <div class="ix-mark">IX</div>
+          <h3 class="serif">No enquiries yet.</h3>
+          <p>When someone submits the <a href="quote.html" style="border-bottom: 1px solid var(--ink);">quotation form</a>, the entry will appear here. Try submitting a test enquiry to see how it looks.</p>
+        </div>`;
+      return;
+    }
+
+    if (list.length === 0) {
+      content.innerHTML = `<div class="empty"><h3 class="serif">No matches.</h3><p>Nothing in <strong>${all.length}</strong> enquiries matches "${q}".</p></div>`;
+      return;
+    }
+
+    content.innerHTML = `
+      <div class="subs-wrap">
+        <table class="subs">
+          <thead><tr>
+            <th>Submitted</th><th>Contact</th><th>Event</th><th>Date · Guests</th><th>Package</th><th style="text-align:right;">Ref</th>
+          </tr></thead>
+          <tbody>
+            ${list.map((s, i) => `
+              <tr data-id="${s.id}">
+                <td><div>${fmtDate(s.submittedAt).split(',')[0]}</div><div class="meta">${fmtDate(s.submittedAt).split(',')[1] || ''}</div></td>
+                <td><div class="sub-name">${esc(s.name || '—')}</div><div class="sub-email">${esc(s.email || '')}</div></td>
+                <td><span class="type-pill">${esc(s.eventType || '—')}</span></td>
+                <td><div>${fmtEventDate(s.eventDate)}</div><div class="meta">${esc(s.guests || '—')} guests · ${esc(s.flexibility || '—')}</div></td>
+                <td>${esc(s.package || '—')}</td>
+                <td style="text-align:right;"><span class="ref">${esc(s.id)}</span></td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size: 12px; color: var(--taupe-dark); margin-top: 18px;">
+        Showing ${list.length} of ${all.length} ${all.length === 1 ? 'enquiry' : 'enquiries'}.
+      </p>`;
+
+    // Wire row clicks
+    content.querySelectorAll('tr[data-id]').forEach(tr => {
+      tr.addEventListener('click', () => openDetail(tr.dataset.id));
+    });
+  }
+
+  function esc(s) { return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  // ── Detail modal ────────────────────────────────────
+  const modal = document.getElementById('modal');
+  const mFields = document.getElementById('mFields');
+  const mTitle = document.getElementById('mTitle');
+  const mRef   = document.getElementById('mRef');
+  const mPill  = document.getElementById('mPill');
+  const mReply = document.getElementById('mReply');
+  const mCall  = document.getElementById('mCall');
+  const mDelete = document.getElementById('mDelete');
+  const mClose = document.getElementById('mClose');
+
+  let activeId = null;
+
+  function row(label, value, opts = {}) {
+    if (!value || (Array.isArray(value) && value.length === 0)) {
+      return `<dt>${label}</dt><dd class="empty-val">—</dd>`;
+    }
+    const v = Array.isArray(value) ? value.join(', ') : value;
+    return `<dt>${label}</dt><dd class="${opts.cls || ''}">${esc(v)}</dd>`;
+  }
+
+  function openDetail(id) {
+    const sub = load().find(s => s.id === id);
+    if (!sub) return;
+    activeId = id;
+    mTitle.innerHTML = `${esc(sub.name)} <em>·</em> ${esc(sub.eventType || 'Enquiry')}`;
+    mRef.textContent = `${sub.id} · received ${fmtDate(sub.submittedAt)}`;
+    mPill.textContent = sub.eventType || 'Enquiry';
+
+    mFields.innerHTML =
+      row('Event date',    fmtEventDate(sub.eventDate)) +
+      row('Flexibility',   sub.flexibility) +
+      row('Guests',        sub.guests) +
+      row('Package',       sub.package) +
+      row('Catering',      sub.catering) +
+      row('Extras',        sub.extras) +
+      row('Heard via',     sub.source) +
+      row('Phone',         sub.phone) +
+      row('Email',         sub.email) +
+      row('Notes',         sub.notes, { cls: 'notes' });
+
+    const subject = encodeURIComponent(`Re: your enquiry — ${sub.eventType || 'event'} — ${sub.id}`);
+    const body    = encodeURIComponent(
+`Hello ${sub.name?.split(' ')[0] || ''},
+
+Thank you for your enquiry about ${sub.eventType?.toLowerCase() || 'your event'} at Nine Angels Villa on ${fmtEventDate(sub.eventDate)}.
+
+`);
+    mReply.href = `mailto:${sub.email}?subject=${subject}&body=${body}`;
+
+    if (sub.phone) {
+      mCall.href = `tel:${sub.phone.replace(/\s+/g,'')}`;
+      mCall.style.display = '';
+    } else {
+      mCall.style.display = 'none';
+    }
+
+    modal.classList.add('show');
+  }
+
+  function closeModal() { modal.classList.remove('show'); activeId = null; }
+  mClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  mDelete.addEventListener('click', () => {
+    if (!activeId) return;
+    if (!confirm('Delete this enquiry from the local log? (This does not undo the email.)')) return;
+    save(load().filter(s => s.id !== activeId));
+    closeModal();
+    render();
+  });
+
+  // ── Export ──────────────────────────────────────────
+  btnExport.addEventListener('click', () => {
+    const list = load();
+    if (!list.length) { alert('Nothing to export yet.'); return; }
+    const cols = ['id','submittedAt','name','email','phone','eventType','eventDate','flexibility','guests','package','catering','extras','source','notes'];
+    const csv = [
+      cols.join(','),
+      ...list.map(s => cols.map(c => {
+        const v = Array.isArray(s[c]) ? s[c].join('; ') : (s[c] ?? '');
+        const str = String(v).replace(/"/g, '""');
+        return /[",\n]/.test(str) ? `"${str}"` : str;
+      }).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `nine-angels-enquiries-${new Date().toISOString().slice(0,10)}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // ── Search ──────────────────────────────────────────
+  search.addEventListener('input', render);
+
+  // ── Boot ────────────────────────────────────────────
+  render();
+})();
+</script>
+</body>
+</html>
