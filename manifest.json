@@ -1,0 +1,52 @@
+{
+  "name": "Nine Angels Villa",
+  "short_name": "Nine Angels",
+  "description": "A private villa in Madliena, Malta. Available for events and stays.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#faf7f1",
+  "theme_color": "#2d2a24",
+  "categories": ["travel", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/pool-aerial.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Nine Angels Villa — lagoon pool aerial view"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Book a Stay",
+      "url": "/stays.html",
+      "description": "View the villa and book your stay"
+    },
+    {
+      "name": "Host an Event",
+      "url": "/events.html",
+      "description": "Explore our event venue"
+    },
+    {
+      "name": "Get in Touch",
+      "url": "/contact.html",
+      "description": "Contact Nine Angels Villa"
+    }
+  ]
+}

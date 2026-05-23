@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Page Not Found — Nine Angels Villa</title>
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#2d2a24" />
+<style>
+.not-found {
+  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(80px, 12vw, 160px) 48px;
+}
+.not-found .num {
+  font-family: var(--serif);
+  font-size: clamp(80px, 18vw, 200px);
+  font-weight: 300;
+  line-height: 0.9;
+  color: var(--line);
+  letter-spacing: -0.04em;
+  margin-bottom: 40px;
+  animation: numDrift 6s ease-in-out infinite alternate;
+}
+@keyframes numDrift {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-12px); }
+}
+.not-found h1 { font-size: clamp(28px, 4vw, 44px); margin-bottom: 18px; }
+.not-found p.lede { margin: 0 auto 44px; }
+@media (max-width: 600px) {
+  .not-found { padding: 80px 20px; }
+}
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-mark">IX</span><span>Nine Angels</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="stays.html">Stays</a></li>
+      <li><a href="gallery.html">Gallery</a></li>
+      <li><a href="info.html">Info</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <a href="contact.html" class="nav-cta">Enquire</a>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">☰</button>
+  </div>
+  <div class="mobile-menu" role="navigation" aria-label="Mobile navigation">
+    <a href="index.html">Home</a>
+    <a href="events.html">Events</a>
+    <a href="stays.html">Stays</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="info.html">Info</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<main id="main">
+  <section class="not-found">
+    <div class="num" aria-hidden="true">404</div>
+    <div class="divider" style="margin-bottom: 32px;"><span class="divider-mark">IX</span></div>
+    <h1>The gate is closed here.</h1>
+    <p class="lede">This page doesn't exist — but the villa does. Head back and find what you're looking for.</p>
+    <div style="display:flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+      <a href="index.html" class="btn btn-primary">Back to Home <span class="arrow">→</span></a>
+      <a href="contact.html" class="btn btn-outline">Contact Us</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer" style="margin-top: 0;">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand"><span class="brand-mark">IX</span><span class="serif">Nine Angels</span></div>
+        <p style="margin-top: 8px; max-width: 32ch;">A private villa in Madliena, Malta. Available for events and stays.</p>
+      </div>
+      <div><h4>Visit</h4><ul>
+        <li><a href="events.html">Events</a></li><li><a href="stays.html">Stays</a></li>
+        <li><a href="gallery.html">Gallery</a></li><li><a href="info.html">Practical Info</a></li>
+      </ul></div>
+      <div><h4>Find us</h4><ul>
+        <li>Madliena Road</li><li>Madliena, Malta</li>
+        <li><a href="https://bit.ly/nineangels" target="_blank" rel="noopener">View on map ↗</a></li>
+      </ul></div>
+      <div><h4>Get in touch</h4><ul>
+        <li><a href="tel:+35679790202">+356 7979 0202</a></li>
+        <li><a href="mailto:info@christianopropertymanagement.com">info@christianopropertymanagement.com</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 Nine Angels Villa</span><span class="monogram">— IX —</span></div>
+  </div>
+</footer>
+
+<script src="shared.js"></script>
+</body>
+</html>

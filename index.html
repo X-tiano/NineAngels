@@ -3,8 +3,54 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Nine Angels Villa - Madliena, Malta</title>
+<title>Nine Angels Villa — Private Villa & Event Venue, Madliena Malta</title>
+<meta name="description" content="Nine Angels Villa is a hidden Mediterranean oasis in Madliena, Malta. A lagoon pool, lush palm gardens, and a setting for weddings, events, and private stays." />
+<meta name="robots" content="index, follow" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Nine Angels Villa" />
+<meta property="og:title" content="Nine Angels Villa — Private Villa & Event Venue, Madliena Malta" />
+<meta property="og:description" content="A hidden Mediterranean oasis in Madliena, Malta. Lagoon pool, palm gardens, and an intimate setting for weddings, events, and private stays." />
+<meta property="og:image" content="assets/pool-aerial.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Nine Angels Villa — Madliena, Malta" />
+<meta name="twitter:description" content="A private villa in Madliena, Malta. Available for events and stays." />
+<meta name="twitter:image" content="assets/pool-aerial.jpg" />
+<meta name="theme-color" content="#2d2a24" />
+<link rel="manifest" href="manifest.json" />
+<link rel="apple-touch-icon" href="assets/icon-192.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="image" href="assets/pool-aerial.jpg" />
 <link rel="stylesheet" href="styles.css" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": ["LodgingBusiness", "EventVenue"],
+  "name": "Nine Angels Villa",
+  "description": "A private villa in Madliena, Malta. Available for weddings, events, and private stays.",
+  "url": "https://nineangelsvilla.com",
+  "telephone": "+35679790202",
+  "email": "info@christianopropertymanagement.com",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Madliena Road",
+    "addressLocality": "Madliena",
+    "addressCountry": "MT"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 35.917,
+    "longitude": 14.46
+  },
+  "amenityFeature": [
+    {"@type": "LocationFeatureSpecification", "name": "Lagoon Pool", "value": true},
+    {"@type": "LocationFeatureSpecification", "name": "Palm Garden", "value": true},
+    {"@type": "LocationFeatureSpecification", "name": "Outdoor Kitchen", "value": true},
+    {"@type": "LocationFeatureSpecification", "name": "WiFi", "value": true}
+  ],
+  "numberOfRooms": 5
+}
+</script>
 <style>
   /* ── Home full-bleed hero ─────────────────────────── */
   .hero-bleed {
@@ -141,6 +187,8 @@
 </head>
 <body data-screen-label="01 Home" class="home">
 
+<a class="skip-link" href="#main">Skip to content</a>
+
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
@@ -170,11 +218,12 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero-bleed" aria-label="Nine Angels Villa - aerial view">
+<main id="main">
+<section class="hero-bleed" aria-label="Nine Angels Villa - aerial view" data-parallax-base="38">
   <div class="hero-stack">
     <span class="eyebrow">Madliena · Malta · Est. 2010</span>
-    <h1 class="serif">Behind the Gate.<br/><em style="font-weight:300">A World Apart.</em></h1>
-    <p class="lede">A hidden Mediterranean oasis in Madliena. A lagoon pool, lush palm gardens, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
+    <h1 class="serif" data-parallax-float="0.04">Behind the Gate.<br/><em style="font-weight:300">A World Apart.</em></h1>
+    <p class="lede" data-parallax-float="0.06">A hidden Mediterranean oasis in Madliena. A lagoon pool, lush palm gardens, and a setting that works as hard for a wedding as it does for a quiet week away.</p>
     <div class="hero-cta-row">
       <a href="events.html" class="btn btn-primary">Host Your Event <span class="arrow">→</span></a>
       <a href="stays.html" class="btn btn-outline">Book Your Stay <span class="arrow">→</span></a>
@@ -294,6 +343,8 @@
     </div>
   </div>
 </section>
+
+</main><!-- /#main -->
 
 <!-- FOOTER -->
 <footer class="footer">
