@@ -1071,3 +1071,349 @@ body {
     transform: none !important;
   }
 }
+
+/* ═══════════════════════════════════════════════════
+   GAME-CHANGERS
+═══════════════════════════════════════════════════ */
+
+/* ── 1. Lazy-load fade-in ─────────────────────────── */
+
+@keyframes lazyReveal {
+  from { opacity: 0; transform: scale(1.02); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.ph.lazy-pending {
+  background-image: none !important;
+}
+.ph.lazy-loaded {
+  animation: lazyReveal 0.6s var(--ease-out) both;
+}
+
+/* ── 2. Scroll progress bar ───────────────────────── */
+
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--rose), var(--taupe));
+  width: 0%;
+  z-index: 9999;
+  transition: width 0.1s linear;
+  pointer-events: none;
+}
+
+/* ── 3. Lightbox ──────────────────────────────────── */
+
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(20, 18, 14, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease-out);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.lightbox-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.lightbox-img {
+  max-width: 92vw;
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: 2px;
+  transform: scale(0.92);
+  transition: transform 0.4s var(--ease-spring);
+  user-select: none;
+}
+.lightbox-overlay.open .lightbox-img {
+  transform: scale(1);
+}
+.lightbox-close {
+  position: absolute;
+  top: 24px; right: 28px;
+  background: none;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  z-index: 2001;
+}
+.lightbox-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+.lightbox-prev, .lightbox-next {
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  z-index: 2001;
+}
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+.lightbox-prev:hover, .lightbox-next:hover {
+  background: rgba(255,255,255,0.12); color: #fff;
+  transform: translateY(-50%) scale(1.08);
+}
+.lightbox-counter {
+  position: absolute;
+  bottom: 24px; left: 50%; transform: translateX(-50%);
+  font-family: var(--sans);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: rgba(255,255,255,0.5);
+}
+/* Gallery images become clickable */
+.gallery-grid .ph[data-img] { cursor: zoom-in; }
+
+/* ── 4. Sticky booking CTA ────────────────────────── */
+
+.sticky-cta {
+  position: fixed;
+  bottom: 96px; /* above whatsapp FAB */
+  right: 28px;
+  z-index: 190;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  transform: translateX(120px);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-spring), opacity 0.4s;
+  pointer-events: none;
+}
+.sticky-cta.visible {
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+.sticky-cta a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 20px;
+  border-radius: 999px;
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  font-weight: 500;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 6px 24px -8px rgba(45,42,36,0.4);
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s, background 0.2s;
+}
+.sticky-cta a:hover {
+  transform: scale(1.04) translateX(-2px);
+  box-shadow: 0 10px 32px -8px rgba(45,42,36,0.45);
+}
+.sticky-cta a + a {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.sticky-cta a + a:hover { background: var(--cream); }
+@media (max-width: 600px) {
+  .sticky-cta { bottom: 84px; right: 20px; }
+}
+
+/* ── 5. Back-to-top button ────────────────────────── */
+
+.back-top {
+  position: fixed;
+  bottom: 28px; left: 28px;
+  z-index: 190;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  opacity: 0; transform: translateY(12px);
+  transition: opacity 0.3s, transform 0.3s var(--ease-spring), box-shadow 0.3s, background 0.2s;
+  font-size: 16px;
+  box-shadow: 0 2px 12px -6px rgba(45,42,36,0.2);
+}
+.back-top.visible { opacity: 1; transform: translateY(0); }
+.back-top:hover {
+  background: var(--ink);
+  color: var(--paper);
+  box-shadow: 0 8px 24px -8px rgba(45,42,36,0.3);
+  transform: translateY(-2px);
+}
+@media (max-width: 600px) {
+  .back-top { bottom: 20px; left: 20px; width: 40px; height: 40px; }
+}
+
+/* ── 6. Page transition veil ──────────────────────── */
+
+.page-veil {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  background: var(--paper);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.28s var(--ease-out);
+}
+.page-veil.fade-out { opacity: 1; pointer-events: all; }
+
+/* ── 7. Cookie consent ────────────────────────────── */
+
+.cookie-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 1500;
+  background: rgba(22,20,15,0.97);
+  color: var(--paper);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  justify-content: space-between;
+  transform: translateY(100%);
+  transition: transform 0.45s var(--ease-out);
+  backdrop-filter: blur(4px);
+  font-family: var(--sans);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.cookie-bar.show { transform: translateY(0); }
+.cookie-bar a { color: var(--rose); border-bottom: 1px solid var(--rose); padding-bottom: 1px; }
+.cookie-bar-actions { display: flex; gap: 10px; flex-shrink: 0; }
+.cookie-accept {
+  padding: 9px 22px;
+  background: var(--paper);
+  color: var(--ink);
+  border: none;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: var(--sans);
+  text-transform: uppercase;
+  transition: opacity 0.2s;
+}
+.cookie-accept:hover { opacity: 0.85; }
+.cookie-decline {
+  padding: 9px 16px;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: color 0.2s, border-color 0.2s;
+}
+.cookie-decline:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+@media (max-width: 600px) {
+  .cookie-bar { flex-direction: column; align-items: flex-start; gap: 14px; padding: 18px 20px; }
+  .cookie-bar-actions { width: 100%; }
+  .cookie-accept { flex: 1; text-align: center; }
+}
+
+/* ── 8. Magnetic button effect (CSS layer) ────────── */
+
+.btn-magnetic {
+  transition: transform 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out),
+              background 0.25s, color 0.25s, border-color 0.25s;
+}
+
+/* ── 9. Hero split-text animation ─────────────────── */
+
+.split-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.split-word .split-inner {
+  display: inline-block;
+  transform: translateY(105%);
+  opacity: 0;
+  animation: wordReveal 0.9s var(--ease-out) both;
+  animation-delay: var(--word-delay, 0ms);
+}
+@keyframes wordReveal {
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── 10. Active section nav highlight ─────────────── */
+/* handled via JS adding .active class — already styled */
+
+/* ── 11. Dark mode ────────────────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --cream:       #1e1b16;
+    --cream-deep:  #181511;
+    --paper:       #14120d;
+    --taupe:       #7a6e5f;
+    --taupe-light: #5c5248;
+    --taupe-dark:  #9a8e7d;
+    --ink:         #ece6da;
+    --ink-soft:    #b5ada0;
+    --rose:        #c9a896;
+    --line:        #2a271f;
+  }
+  .nav {
+    background: rgba(20,18,13,0.9);
+    border-bottom-color: rgba(42,39,31,0.8);
+  }
+  .nav.scrolled { background: rgba(20,18,13,0.97); }
+  .ph { background:
+    repeating-linear-gradient(135deg, #2a2720 0 1px, transparent 1px 14px),
+    linear-gradient(180deg, #221f18, #1c1a14);
+  }
+  .ph::after { background: rgba(20,18,13,0.88); }
+  .card, .rate-grid, .room, .path, .contact-card { background: #1a1812; }
+  .cookie-bar { background: rgba(10,9,6,0.98); }
+  .page-veil { background: var(--paper); }
+  .back-top { background: #1e1b16; }
+  .sticky-cta a + a { background: #1e1b16; border-color: var(--line); }
+  /* Ensure images still look good */
+  .ph[data-img] { filter: brightness(0.92) saturate(0.95); }
+  .ph[data-img]:hover { filter: brightness(1) saturate(1.02); }
+}
+
+/* ── 12. Touch swipe indicator (mobile) ──────────── */
+
+.swipe-hint {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--taupe);
+  margin-top: 16px;
+}
+@media (max-width: 760px) {
+  .swipe-hint { display: flex; }
+}
+.swipe-hint::before {
+  content: '⟵';
+  animation: swipeNudge 2s ease-in-out infinite;
+}
+@keyframes swipeNudge {
+  0%, 100% { transform: translateX(0); }
+  50%       { transform: translateX(-6px); }
+}
+
