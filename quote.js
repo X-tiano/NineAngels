@@ -60,7 +60,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const el  = form.querySelector(`[name="${name}"]`);
     const box = form.querySelector(`[data-err="${name}"]`);
     if (box) box.textContent = msg || '';
-    if (el && el.classList) el.classList.toggle('invalid', !!msg);
+    if (el && el.classList) {
+      // Checkboxes: mark the wrapper label, not the input itself
+      const target = el.type === 'checkbox' ? el.closest('label') || el : el;
+      target.classList.toggle('invalid', !!msg);
+    }
   }
   function clearErrs(panel) {
     panel.querySelectorAll('[data-err]').forEach(b => b.textContent = '');
@@ -137,8 +141,27 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { console.warn('Could not save locally:', e); }
   }
 
-  // ── Send (Formspree if configured; otherwise just save+mailto) ───
-  async function sendToFormspree(sub) {
+  // ── Send ─────────────────────────────────────────────────────────
+  // Tries the Vercel API endpoint first; falls back to Formspree directly.
+  async function sendEnquiry(sub) {
+    // Try our own API endpoint (works when deployed to Vercel)
+    try {
+      const res = await fetch('/api/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(sub),
+      });
+      if (res.ok) return { ok: true };
+      // 4xx means bad data; surface the message
+      if (res.status >= 400 && res.status < 500) {
+        const json = await res.json().catch(() => ({}));
+        return { ok: false, reason: json.error || 'Validation error', fatal: true };
+      }
+    } catch (_) {
+      // fetch failed (offline, or running locally without the API) — fall through
+    }
+
+    // Fallback: post directly to Formspree
     if (!CONFIG.formspreeId) return { ok: false, reason: 'unconfigured' };
     try {
       const res = await fetch(`https://formspree.io/f/${CONFIG.formspreeId}`, {
@@ -151,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
           extras: sub.extras.join(', '),
         }),
       });
-      return { ok: res.ok };
+      return { ok: res.ok, reason: res.ok ? '' : 'Formspree error' };
     } catch (e) {
       return { ok: false, reason: 'network' };
     }
@@ -162,13 +185,26 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     if (!validateStep(3)) return;
 
+    const errBox = form.querySelector('[data-err="submit"]');
+    if (errBox) errBox.textContent = '';
+
     btnSubmit.disabled = true;
     const originalLabel = btnSubmit.innerHTML;
     btnSubmit.innerHTML = 'Sending…';
 
     const sub = collect();
     saveLocal(sub);
-    await sendToFormspree(sub); // best-effort — we still show success below
+    const result = await sendEnquiry(sub);
+
+    if (!result.ok) {
+      // Show inline error; let user try again
+      if (errBox) errBox.textContent = result.reason === 'network'
+        ? 'No connection — please check your internet and try again.'
+        : (result.reason || 'Something went wrong. Please try again or email us directly.');
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = originalLabel;
+      return;
+    }
 
     // Show thank-you
     document.getElementById('thanksName').textContent  = sub.name.split(' ')[0] || 'friend';
