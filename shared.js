@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     overlay.innerHTML = `
       <button class="lightbox-close" aria-label="Close lightbox">✕</button>
       <button class="lightbox-prev" aria-label="Previous photo">‹</button>
-      <img class="lightbox-img" src="" alt="Villa photo" />
+      <img class="lightbox-img" src="" alt="Villa photo" decoding="async" />
       <button class="lightbox-next" aria-label="Next photo">›</button>
       <div class="lightbox-counter"></div>
     `;

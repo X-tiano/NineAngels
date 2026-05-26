@@ -48,6 +48,7 @@ a {
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -398,6 +399,7 @@ section {
 
 .ph {
   position: relative;
+  min-height: 1px; /* prevent zero-height collapse */
   background:
     repeating-linear-gradient(
       135deg,
