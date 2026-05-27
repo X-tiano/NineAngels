@@ -48,6 +48,7 @@ a {
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -398,6 +399,7 @@ section {
 
 .ph {
   position: relative;
+  min-height: 1px; /* prevent zero-height collapse */
   background:
     repeating-linear-gradient(
       135deg,
@@ -618,6 +620,10 @@ section {
 .event-type:hover .ph { transform: scale(1.04); }
 
 /* ── Gallery photos ───────────────────────────────── */
+
+.gallery-grid {
+  overflow: hidden; /* contain hover-scale on individual photos */
+}
 
 .gallery-grid .ph {
   transition: transform 0.7s var(--ease-out), filter 0.5s;
@@ -1079,8 +1085,8 @@ body {
 /* ── 1. Lazy-load fade-in ─────────────────────────── */
 
 @keyframes lazyReveal {
-  from { opacity: 0; transform: scale(1.02); }
-  to   { opacity: 1; transform: scale(1); }
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 .ph.lazy-pending {
   background-image: none !important;

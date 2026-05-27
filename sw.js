@@ -1,5 +1,5 @@
 /* Nine Angels Villa — Service Worker */
-const CACHE_NAME = 'nine-angels-v1';
+const CACHE_NAME = 'nine-angels-v2';
 const STATIC_ASSETS = [
   '/index.html',
   '/events.html',
@@ -13,7 +13,16 @@ const STATIC_ASSETS = [
   '/styles.css',
   '/shared.js',
   '/quote.js',
-  '/manifest.json'
+  '/manifest.json',
+  '/assets/icon-192.png',
+  '/assets/icon-512.png'
+];
+
+// Large assets cached lazily on first visit (not in install to avoid blocking SW setup)
+const PREFETCH_IMAGES = [
+  '/assets/pool-aerial.jpg',
+  '/assets/pool-dusk.jpg',
+  '/assets/rose-arch-night.jpg'
 ];
 
 // Install — cache core shell
@@ -25,12 +34,22 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activate — purge old caches
+// Activate — purge old caches, then warm up key images in the background
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
+      .then(() => {
+        // Warm up critical images after activation (non-blocking — failures are silent)
+        caches.open(CACHE_NAME).then(cache => {
+          PREFETCH_IMAGES.forEach(url => {
+            cache.match(url).then(hit => {
+              if (!hit) fetch(url).then(r => { if (r.ok) cache.put(url, r); }).catch(() => {});
+            });
+          });
+        });
+      })
   );
 });
 
