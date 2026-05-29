@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     btnBack.hidden   = current === 1;
     btnNext.hidden   = current === total;
-    btnSubmit.hidden = current !== total;
+    btnSubmit.hidden = current < total;
     stepLbl.textContent = `Step ${current} of ${total}`;
     // Scroll the active panel into view nicely
     panels.find(p => p.classList.contains('active'))?.focus?.();
