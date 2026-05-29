@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "NineAngels",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3000"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "-l", "3000", "/Users/christianovincenti/Downloads/NineAngels"],
       "port": 3000
     }
   ]
