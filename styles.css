@@ -25,6 +25,8 @@
 
 html {
   scroll-behavior: smooth;
+  background: #1a1814;
+  overscroll-behavior: none;
 }
 
 body {
