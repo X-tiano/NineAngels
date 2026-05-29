@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "nine-angels",
-      "runtimeExecutable": "npx",
-      "runtimeArgs": ["serve", "-l", "3000", "."],
+      "name": "NineAngels",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "3000"],
       "port": 3000
     }
   ]
