@@ -1,23 +1,17 @@
 // Nine Angels — Quotation form logic
 //
+
 // ─────────────────────────────────────────────────────────────────────
-// CONFIG — turn on real email delivery
+// CONFIG
 // ─────────────────────────────────────────────────────────────────────
-// To activate real email forwarding + sender auto-reply + a long-term
-// submissions dashboard, sign up at https://formspree.io (free tier is
-// fine for low volume), create a new form pointed at
-// info@christianopropertymanagement.com, and paste its ID below.
-//
-// In Formspree → form settings → Autoresponse, paste the body of the
-// thank-you email (see THANKYOU_TEMPLATE at the bottom of this file).
-//
-// Until configured, every submission is saved locally and visible at
-// /submissions.html — and a "Send via email" fallback link is offered
-// so any submission can still reach the inbox with one click.
+// Email is sent server-side by the Vercel function at /api/enquiry, which
+// talks to Resend using the RESEND_API_KEY env var. Nothing secret lives
+// here. Every submission is also saved locally and visible at
+// /submissions.html as a backstop.
 // ─────────────────────────────────────────────────────────────────────
 
 const CONFIG = {
-  formspreeId: 'xgoqaqzp',                           // e.g. 'mvolwabq'
+  apiPath: '/api/enquiry',
   inboxEmail: 'info@christianopropertymanagement.com',
   storageKey: 'nine-angels-submissions',
 };
@@ -60,11 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const el  = form.querySelector(`[name="${name}"]`);
     const box = form.querySelector(`[data-err="${name}"]`);
     if (box) box.textContent = msg || '';
-    if (el && el.classList) {
-      // Checkboxes: mark the wrapper label, not the input itself
-      const target = el.type === 'checkbox' ? el.closest('label') || el : el;
-      target.classList.toggle('invalid', !!msg);
-    }
+    if (el && el.classList) el.classList.toggle('invalid', !!msg);
   }
   function clearErrs(panel) {
     panel.querySelectorAll('[data-err]').forEach(b => b.textContent = '');
@@ -86,11 +76,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (n === 3) {
       const name  = form.name.value.trim();
       const email = form.email.value.trim();
+      const phone = form.phone.value.trim();
       const consent = form.consent.checked;
       if (!name)  { setErr('name', "What's your name?"); ok = false; }
       if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         setErr('email', 'A valid email so we can reply.'); ok = false;
       }
+      if (!phone) { setErr('phone', 'A phone number so we can reach you.'); ok = false; }
       if (!consent) { setErr('consent', 'We need your permission to email you back.'); ok = false; }
     }
     return ok;
@@ -132,6 +124,39 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+  // ── Human-readable summary (auto-reply body + on-screen recap) ───
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso + 'T00:00:00');
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  }
+  function summaryRows(sub) {
+    return [
+      ['Event',            sub.eventType],
+      ['Preferred date',   fmtDate(sub.eventDate)],
+      ['Date flexibility', sub.flexibility],
+      ['Approx. guests',   sub.guests],
+      ['Package',          sub.package],
+      ['Catering',         sub.catering],
+      ['Extras',           (sub.extras || []).join(', ')],
+      ['Notes',            sub.notes],
+    ].filter(([, v]) => v && String(v).trim());
+  }
+  function buildSummary(sub) {
+    return summaryRows(sub).map(([k, v]) => `${k}: ${v}`).join('\n');
+  }
+  function renderSummary(sub) {
+    const box  = document.getElementById('thanksSummary');
+    const list = document.getElementById('thanksSummaryList');
+    if (!box || !list) return;
+    const rows = summaryRows(sub);
+    if (!rows.length) { box.hidden = true; return; }
+    list.innerHTML = rows.map(([k, v]) =>
+      `<dt>${k}</dt><dd>${String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;')}</dd>`).join('');
+    box.hidden = false;
+  }
+
   // ── Local storage ────────────────────────────────────────────────
   function saveLocal(sub) {
     try {
@@ -141,75 +166,68 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) { console.warn('Could not save locally:', e); }
   }
 
-  // ── Send ─────────────────────────────────────────────────────────
-  // Tries the Vercel API endpoint first; falls back to Formspree directly.
+  // ── Send to our serverless function (Resend) ─────────────────────
   async function sendEnquiry(sub) {
-    // Try our own API endpoint (works when deployed to Vercel)
+    const payload = {
+      name: sub.name, email: sub.email, phone: sub.phone,
+      eventType: sub.eventType, eventDate: sub.eventDate, flexibility: sub.flexibility,
+      guests: sub.guests, package: sub.package, catering: sub.catering,
+      extras: sub.extras, notes: sub.notes, source: sub.source,
+      company: (form.company && form.company.value) || '',   // honeypot
+    };
     try {
-      const res = await fetch('/api/submit', {
+      const res = await fetch(CONFIG.apiPath, {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify(sub),
+        body: JSON.stringify(payload),
       });
-      if (res.ok) return { ok: true };
-      // 4xx means bad data; surface the message
-      if (res.status >= 400 && res.status < 500) {
-        const json = await res.json().catch(() => ({}));
-        return { ok: false, reason: json.error || 'Validation error', fatal: true };
+      let data = {};
+      try { data = await res.json(); } catch { /* ignore */ }
+      if (!res.ok || !data.ok) {
+        return { ok: false, reason: data.error || `http_${res.status}`, fields: data.fields };
       }
-    } catch (_) {
-      // fetch failed (offline, or running locally without the API) — fall through
-    }
-
-    // Fallback: post directly to Formspree
-    if (!CONFIG.formspreeId) return { ok: false, reason: 'unconfigured' };
-    try {
-      const res = await fetch(`https://formspree.io/f/${CONFIG.formspreeId}`, {
-        method: 'POST',
-        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _replyto: sub.email,
-          _subject: `New enquiry — ${sub.eventType || 'event'} — ${sub.name}`,
-          ...sub,
-          extras: sub.extras.join(', '),
-        }),
-      });
-      return { ok: res.ok, reason: res.ok ? '' : 'Formspree error' };
+      return { ok: true, id: data.id, autoReply: data.autoReply !== false };
     } catch (e) {
       return { ok: false, reason: 'network' };
     }
   }
 
   // ── Submit ───────────────────────────────────────────────────────
+  const submitError = document.getElementById('submitError');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!validateStep(3)) return;
 
-    const errBox = form.querySelector('[data-err="submit"]');
-    if (errBox) errBox.textContent = '';
-
+    if (submitError) submitError.hidden = true;
     btnSubmit.disabled = true;
     const originalLabel = btnSubmit.innerHTML;
     btnSubmit.innerHTML = 'Sending…';
 
     const sub = collect();
-    saveLocal(sub);
+    saveLocal(sub);                       // local backstop — never lose an enquiry
     const result = await sendEnquiry(sub);
 
     if (!result.ok) {
-      // Show inline error; let user try again
-      if (errBox) errBox.textContent = result.reason === 'network'
-        ? 'No connection — please check your internet and try again.'
-        : (result.reason || 'Something went wrong. Please try again or email us directly.');
+      // Don't fake success — let them retry.
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = originalLabel;
+      if (submitError) {
+        submitError.innerHTML = result.reason === 'network'
+          ? 'We couldn’t reach our server just now. Please check your connection and try again — or email us directly at <a href="mailto:' + CONFIG.inboxEmail + '">' + CONFIG.inboxEmail + '</a>.'
+          : 'Something went wrong sending your enquiry. Please try again, or email us at <a href="mailto:' + CONFIG.inboxEmail + '">' + CONFIG.inboxEmail + '</a>.';
+        submitError.hidden = false;
+      }
       return;
     }
+
+    // Use the authoritative reference issued by the server.
+    if (result.id) sub.id = result.id;
 
     // Show thank-you
     document.getElementById('thanksName').textContent  = sub.name.split(' ')[0] || 'friend';
     document.getElementById('thanksEmail').textContent = sub.email;
     document.getElementById('thanksRef').textContent   = sub.id;
+    renderSummary(sub);
 
     formHead.style.display = 'none';
     form.style.display = 'none';
@@ -225,24 +243,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ─────────────────────────────────────────────────────────────────────
-// THANKYOU_TEMPLATE — copy this body into Formspree's Autoresponse
-// settings so every sender gets a thank-you email within seconds.
+// EMAIL DELIVERY — handled server-side by /api/enquiry.js via Resend.
+// Both the internal notification and the guest auto-reply (with their
+// enquiry summary) are composed and sent there.
+//
+// Deploy notes (Vercel):
+//   • Set env var  RESEND_API_KEY  (Project → Settings → Environment Variables).
+//   • Optional:  ENQUIRY_FROM  (a verified Resend domain sender, e.g.
+//     "Nine Angels Villa <events@yourdomain.com>"),  ENQUIRY_INBOX,
+//     ENQUIRY_BCC,  ALLOWED_ORIGIN.
+//   • Verify your sending domain in Resend before going live; until then the
+//     function falls back to Resend's onboarding@resend.dev sandbox sender.
 // ─────────────────────────────────────────────────────────────────────
-/*
-Subject: We've got your enquiry — Nine Angels Villa
-
-Hello,
-
-Thank you for getting in touch about Nine Angels Villa.
-
-We've received your enquiry and one of us will reply personally within
-24 hours — usually much sooner.
-
-In the meantime, if you'd like to add anything or change a detail,
-just reply to this email.
-
-Warmly,
-The Nine Angels team
-Madliena, Malta
-info@christianopropertymanagement.com
-*/

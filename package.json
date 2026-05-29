@@ -1,0 +1,9 @@
+{
+  "name": "nine-angels-villa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nine Angels Villa — static site + enquiry intake serverless function (Resend).",
+  "engines": {
+    "node": ">=18"
+  }
+}
