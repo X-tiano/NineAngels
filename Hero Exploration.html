@@ -11,6 +11,10 @@
   };
 </script>
 <script defer src="https://cdn.vercel-insights.com/v1/script.js"></script>
+<script type="module">
+  import { injectSpeedInsights } from 'https://cdn.jsdelivr.net/npm/@vercel/speed-insights@2.0.0/dist/index.mjs';
+  injectSpeedInsights();
+</script>
 <style>
   /* Canvas-frame–scoped styles — mirror the live nav + hero so artboards feel native */
   .ab { width: 1440px; background: var(--paper); font-family: var(--sans); color: var(--ink); position: relative; overflow: hidden; }
