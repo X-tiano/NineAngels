@@ -23,6 +23,9 @@
   padding: 0;
 }
 
+/* Ensure [hidden] always wins over display rules */
+[hidden] { display: none !important; }
+
 html {
   scroll-behavior: smooth;
   background: #1a1814;
